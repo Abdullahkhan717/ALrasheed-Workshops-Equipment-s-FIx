@@ -1,0 +1,102 @@
+import React, { useState } from 'react';
+import { useData } from '../context/DataContext';
+import { useTranslation } from '../hooks/useTranslation';
+import { OilLogView } from './OilLogView';
+import { PlusIcon } from './Icons';
+
+export const OilLogHistoryView: React.FC = () => {
+  const { t, language } = useTranslation();
+  const { oilLogs, equipments } = useData();
+  const [showForm, setShowForm] = useState(false);
+
+  if (showForm) {
+    return (
+      <div>
+        <div className="mb-4">
+          <button 
+            onClick={() => setShowForm(false)}
+            className="text-blue-600 hover:underline font-bold"
+          >
+            ← {t('backToHistory') || 'Back to History'}
+          </button>
+        </div>
+        <OilLogView />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold text-gray-800">{t('oilLogHistory')}</h2>
+        <button 
+          onClick={() => setShowForm(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition flex items-center font-bold"
+        >
+          <PlusIcon className="h-5 w-5 me-2" />
+          {t('newOilLog') || 'New Oil Log'}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {oilLogs.length > 0 ? (
+          oilLogs
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .map(log => {
+              const equipment = equipments.find(e => e.id === log.equipmentId);
+              return (
+                <div key={log.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <p className="font-bold text-blue-600">
+                        {equipment ? (
+                          language === 'ar' && equipment.arabicName 
+                            ? `${equipment.arabicName} ${equipment.equipmentNumber} (${equipment.serialNumber})` 
+                            : `${t(equipment.equipmentType)} ${equipment.equipmentNumber} (${equipment.serialNumber})`
+                        ) : 'Unknown Equipment'}
+                      </p>
+                      <p className="text-sm text-gray-500">{log.date} at {log.time}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-500 font-medium">{t('driver')}</p>
+                      <p className="font-bold">{log.driverName}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500 font-medium">{t('mileage')}</p>
+                      <p className="font-bold">{log.mileage}</p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-gray-500 font-medium mb-1">{t('oilTypes')}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {(Array.isArray(log.oilTypes) ? log.oilTypes : []).map((ot, i) => (
+                          <span key={i} className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded font-bold border border-blue-100">
+                            {t(`oilLog_${ot}` as any) !== `oilLog_${ot}` ? t(`oilLog_${ot}` as any) : ot}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-gray-500 font-medium mb-1">{t('filters')}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {(Array.isArray(log.filters) ? log.filters : []).map((f, i) => (
+                          <span key={i} className="bg-gray-50 text-gray-700 text-xs px-2 py-1 rounded font-bold border border-gray-100">
+                            {t(`oilLog_${f}` as any) !== `oilLog_${f}` ? t(`oilLog_${f}` as any) : f}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+        ) : (
+          <div className="col-span-2 text-center py-10 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+            <p className="text-gray-500">{t('noOilLogsFound') || 'No oil logs found.'}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
