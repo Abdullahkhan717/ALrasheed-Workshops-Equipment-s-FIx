@@ -15,7 +15,7 @@ export const OilLogHistoryView: React.FC = () => {
         <div className="mb-4">
           <button 
             onClick={() => setShowForm(false)}
-            className="text-blue-600 hover:underline font-bold"
+            className="text-green-600 hover:underline font-bold"
           >
             ← {t('backToHistory') || 'Back to History'}
           </button>
@@ -31,7 +31,7 @@ export const OilLogHistoryView: React.FC = () => {
         <h2 className="text-xl font-bold text-gray-800">{t('oilLogHistory')}</h2>
         <button 
           onClick={() => setShowForm(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition flex items-center font-bold"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition flex items-center font-bold"
         >
           <PlusIcon className="h-5 w-5 me-2" />
           {t('newOilLog') || 'New Oil Log'}
@@ -48,7 +48,7 @@ export const OilLogHistoryView: React.FC = () => {
                 <div key={log.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <p className="font-bold text-blue-600">
+                      <p className="font-bold text-green-600">
                         {equipment ? (
                           language === 'ar' && equipment.arabicName 
                             ? `${equipment.arabicName} ${equipment.equipmentNumber} (${equipment.serialNumber})` 
@@ -71,7 +71,7 @@ export const OilLogHistoryView: React.FC = () => {
                       <p className="text-gray-500 font-medium mb-1">{t('oilTypes')}</p>
                       <div className="flex flex-wrap gap-2">
                         {(Array.isArray(log.oilTypes) ? log.oilTypes : []).map((ot, i) => (
-                          <span key={i} className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded font-bold border border-blue-100">
+                          <span key={i} className="bg-green-50 text-green-700 text-xs px-2 py-1 rounded font-bold border border-green-100">
                             {t(`oilLog_${ot}` as any) !== `oilLog_${ot}` ? t(`oilLog_${ot}` as any) : ot}
                           </span>
                         ))}

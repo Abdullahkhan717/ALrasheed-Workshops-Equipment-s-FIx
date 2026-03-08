@@ -39,38 +39,38 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
   };
 
   return (
-    <div className="border-2 border-blue-100 rounded-xl p-6 bg-blue-50">
+    <div className="border-2 border-green-100 rounded-xl p-6 bg-green-50">
       <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-600 mb-1">{t('step1_selectedEquipment')}</h2>
-          <p className="text-2xl font-black text-blue-900 uppercase">
+          <h2 className="text-xl font-bold text-green-600 mb-1">{t('step1_selectedEquipment')}</h2>
+          <p className="text-2xl font-black text-green-900 uppercase">
             {t(equipment.equipmentType)} {equipment.equipmentNumber} ({equipment.serialNumber})
           </p>
         </div>
         <button 
           onClick={onBack}
-          className="bg-white text-blue-600 px-4 py-2 rounded-lg border border-blue-200 shadow-sm hover:bg-blue-100 transition font-bold text-sm"
+          className="bg-white text-green-600 px-4 py-2 rounded-lg border border-green-200 shadow-sm hover:bg-green-100 transition font-bold text-sm"
         >
           {t('back')}
         </button>
       </div>
 
-      <div className="flex space-x-4 rtl:space-x-reverse mb-6 border-b border-blue-200">
+      <div className="flex space-x-4 rtl:space-x-reverse mb-6 border-b border-green-200">
         <button 
           onClick={() => setActiveTab('details')}
-          className={`pb-2 px-4 font-bold transition ${activeTab === 'details' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`pb-2 px-4 font-bold transition ${activeTab === 'details' ? 'border-b-4 border-green-600 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
         >
           {t('details')}
         </button>
         <button 
           onClick={() => setActiveTab('repair')}
-          className={`pb-2 px-4 font-bold transition ${activeTab === 'repair' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`pb-2 px-4 font-bold transition ${activeTab === 'repair' ? 'border-b-4 border-green-600 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
         >
           {t('repairHistory')}
         </button>
         <button 
           onClick={() => setActiveTab('oil')}
-          className={`pb-2 px-4 font-bold transition ${activeTab === 'oil' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`pb-2 px-4 font-bold transition ${activeTab === 'oil' ? 'border-b-4 border-green-600 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
         >
           {t('oilChangeHistory')}
         </button>
@@ -79,27 +79,27 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
       {activeTab === 'details' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8 mb-8">
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('type')}</span>
+            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('type')}</span>
             <span className="font-bold text-gray-800">{t(equipment.equipmentType)}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('make')}</span>
+            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('make')}</span>
             <span className="font-bold text-gray-800">{equipment.make}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('model')}</span>
+            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('model')}</span>
             <span className="font-bold text-gray-800">{equipment.modelNumber}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('serialNumber')}</span>
+            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('serialNumber')}</span>
             <span className="font-bold text-gray-800">{equipment.serialNumber}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('power')}</span>
+            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('power')}</span>
             <span className="font-bold text-gray-800">{equipment.power || '-'}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('location')}</span>
+            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('location')}</span>
             <span className="font-bold text-gray-800">{equipment.branchLocation}</span>
           </div>
         </div>
@@ -112,13 +112,13 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
               .filter(r => r.equipmentId === equipment.id)
               .sort((a, b) => new Date(b.dateIn).getTime() - new Date(a.dateIn).getTime())
               .map(request => (
-                <div key={request.id} className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
+                <div key={request.id} className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-sm font-bold text-blue-600">#{request.id}</span>
+                    <span className="text-sm font-bold text-green-600">#{request.id}</span>
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                       request.status === 'Completed' ? 'bg-green-100 text-green-800' : 
                       request.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                      request.status === 'Accepted' ? 'bg-blue-100 text-blue-800' :
+                      request.status === 'Accepted' ? 'bg-green-100 text-green-800' :
                       'bg-red-100 text-red-800'
                     }`}>
                       {t(request.status.toLowerCase() as any)}
@@ -149,9 +149,9 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
               .filter(o => o.equipmentId === equipment.id)
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map(log => (
-                <div key={log.id} className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
+                <div key={log.id} className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-sm font-bold text-blue-600">{log.date}</span>
+                    <span className="text-sm font-bold text-green-600">{log.date}</span>
                     <span className="text-xs text-gray-500">{log.time}</span>
                   </div>
                   <p className="text-sm text-gray-600 mb-1"><strong>{t('driver')}:</strong> {log.driverName}</p>
@@ -160,7 +160,7 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
                     <p className="text-xs font-bold text-gray-500 uppercase mb-1">{t('oilTypes')}:</p>
                     <div className="flex flex-wrap gap-2">
                       {log.oilTypes.map((ot, i) => (
-                        <span key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">{ot}</span>
+                        <span key={i} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">{ot}</span>
                       ))}
                     </div>
                   </div>
@@ -180,7 +180,7 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
         </div>
       )}
 
-      <div className="flex flex-wrap gap-3 pt-6 border-t border-blue-200">
+      <div className="flex flex-wrap gap-3 pt-6 border-t border-green-200">
         {isHomeBranch(equipment.branchLocation) && (
           <>
             <button 
@@ -214,7 +214,7 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
             </button>
             <button 
               onClick={() => onNewRepairRequest(equipment.id)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow-sm ms-auto"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition shadow-sm ms-auto"
             >
               {t('newRepairRequest')}
             </button>

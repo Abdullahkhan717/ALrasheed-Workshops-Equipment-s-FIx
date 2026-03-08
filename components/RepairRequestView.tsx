@@ -373,7 +373,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
         <div className="border-b pb-8">
             {!selectedEquipment ? (
                 <div>
-                    <h2 className="text-xl font-bold text-blue-600 mb-1">1. Find Equipment</h2>
+                    <h2 className="text-xl font-bold text-green-600 mb-1">1. Find Equipment</h2>
                     <p className="text-gray-500 mb-4 text-sm font-medium">Search by Equipment number or Serial Number</p>
                     <div className="relative">
                         <div className="relative">
@@ -385,7 +385,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                               onFocus={() => setIsSearchFocused(true)}
                               onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
                               placeholder="Search by Equipment or Serial Number"
-                              className="block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           />
                           <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                             <PlusIcon className="h-5 w-5 text-gray-400" />
@@ -398,7 +398,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                                         <div 
                                             key={`${equipment.id}-${index}`} 
                                             onClick={() => handleSelectEquipment(equipment.id)}
-                                            className="p-3 border-b hover:bg-blue-50 cursor-pointer"
+                                            className="p-3 border-b hover:bg-green-50 cursor-pointer"
                                         >
                                             <p className="font-semibold">
                                                 {language === 'ar' && equipment.arabicName ? equipment.arabicName : `${t(equipment.equipmentType)} ${equipment.equipmentNumber}`} ({equipment.serialNumber})
@@ -415,46 +415,46 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                         )}
                     </div>
                      <div className="text-center mt-4">
-                        <button type="button" onClick={() => setShowEquipmentModal(true)} className="text-sm text-blue-600 hover:underline font-semibold flex items-center justify-center mx-auto">
+                        <button type="button" onClick={() => setShowEquipmentModal(true)} className="text-sm text-green-600 hover:underline font-semibold flex items-center justify-center mx-auto">
                             <PlusIcon className="h-4 w-4 me-1" />
                             {t('cantFindEquipmentLink')}
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className="border-2 border-blue-100 rounded-xl p-6 bg-blue-50">
+                <div className="border-2 border-green-100 rounded-xl p-6 bg-green-50">
                     <div className="flex justify-between items-start mb-6">
                         <div>
-                          <h3 className="font-bold text-xl text-blue-600 mb-1">{t('step1_selectedEquipment')}</h3>
-                          <p className="text-2xl font-black text-blue-900 uppercase">
+                          <h3 className="font-bold text-xl text-green-600 mb-1">{t('step1_selectedEquipment')}</h3>
+                          <p className="text-2xl font-black text-green-900 uppercase">
                             {language === 'ar' && selectedEquipment.arabicName ? selectedEquipment.arabicName : `${t(selectedEquipment.equipmentType)} ${selectedEquipment.equipmentNumber}`} ({selectedEquipment.serialNumber})
                           </p>
                         </div>
-                        <button type="button" onClick={resetForm} className="bg-white text-blue-600 px-4 py-2 rounded-lg border border-blue-200 shadow-sm hover:bg-blue-100 transition font-bold text-sm">{t('changeEquipment')}</button>
+                        <button type="button" onClick={resetForm} className="bg-white text-green-600 px-4 py-2 rounded-lg border border-green-200 shadow-sm hover:bg-green-100 transition font-bold text-sm">{t('changeEquipment')}</button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8 text-sm">
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('type')}</span>
+                            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('type')}</span>
                             <span className="font-bold text-gray-800">{t(selectedEquipment.equipmentType)}</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('make')}</span>
+                            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('make')}</span>
                             <span className="font-bold text-gray-800">{selectedEquipment.make}</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('model')}</span>
+                            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('model')}</span>
                             <span className="font-bold text-gray-800">{selectedEquipment.modelNumber}</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('serialNumber')}</span>
+                            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('serialNumber')}</span>
                             <span className="font-bold text-gray-800">{selectedEquipment.serialNumber}</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('power')}</span>
+                            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('power')}</span>
                             <span className="font-bold text-gray-800">{selectedEquipment.power || '-'}</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t('location')}</span>
+                            <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('location')}</span>
                             <span className="font-bold text-gray-800">{selectedEquipment.branchLocation}</span>
                         </div>
                     </div>
@@ -464,15 +464,15 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
 
         {selectedEquipment && (
             <div className="pt-6">
-                <h2 className="text-xl font-bold text-blue-600 mb-4">{t('step2_requestType')}</h2>
+                <h2 className="text-xl font-bold text-green-600 mb-4">{t('step2_requestType')}</h2>
                 <div className="flex space-x-4 rtl:space-x-reverse">
-                    <label className={`flex-1 p-4 border rounded-xl cursor-pointer transition ${requestType === 'repair' ? 'bg-blue-50 border-blue-500 ring-2 ring-blue-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
+                    <label className={`flex-1 p-4 border rounded-xl cursor-pointer transition ${requestType === 'repair' ? 'bg-green-50 border-green-500 ring-2 ring-green-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
                         <input type="radio" name="requestType" value="repair" checked={requestType === 'repair'} onChange={() => setRequestType('repair')} className="hidden" />
                         <div className="text-center">
                             <p className="font-bold text-gray-800">{t('repairRequest')}</p>
                         </div>
                     </label>
-                    <label className={`flex-1 p-4 border rounded-xl cursor-pointer transition ${requestType === 'oil' ? 'bg-blue-50 border-blue-500 ring-2 ring-blue-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
+                    <label className={`flex-1 p-4 border rounded-xl cursor-pointer transition ${requestType === 'oil' ? 'bg-green-50 border-green-500 ring-2 ring-green-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
                         <input type="radio" name="requestType" value="oil" checked={requestType === 'oil'} onChange={() => setRequestType('oil')} className="hidden" />
                         <div className="text-center">
                             <p className="font-bold text-gray-800">{t('oilChangeRequest')}</p>
@@ -518,7 +518,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                                 <option key={l.id} value={l.name}>{l.name}</option>
                             ))
                         }
-                        <option value="addNew" className="text-blue-600 font-bold">+ {t('addNewLocation')}</option>
+                        <option value="addNew" className="text-green-600 font-bold">+ {t('addNewLocation')}</option>
                     </select>
                 </div>
             </div>
@@ -566,11 +566,11 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                 
                 <div>
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-xl font-bold text-blue-600">{t('step3_faultsReported')}</h3>
+                        <h3 className="text-xl font-bold text-green-600">{t('step3_faultsReported')}</h3>
                         <button
                             type="button"
                             onClick={handleAddFault}
-                            className="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-sm font-bold hover:bg-blue-100 transition flex items-center"
+                            className="bg-green-50 text-green-600 px-3 py-1 rounded-lg text-sm font-bold hover:bg-green-100 transition flex items-center"
                         >
                             <PlusIcon className="h-4 w-4 me-1" />
                             {t('addFault')}
@@ -581,7 +581,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                         {faults.map((fault, index) => (
                             <div key={fault.id} className="p-4 border border-gray-200 rounded-xl bg-gray-50 relative">
                                 <div className="flex items-center mb-4">
-                                    <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold me-3">{index + 1}</span>
+                                    <span className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold me-3">{index + 1}</span>
                                     <h4 className="font-bold text-gray-700">{t('faultDetails')}</h4>
                                     {faults.length > 1 && (
                                         <button
@@ -610,7 +610,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                                                     <option key={w.id} value={w.id}>{language === 'ar' && w.arabicName ? w.arabicName : w.subName}</option>
                                                 ))
                                             }
-                                            <option value="addNew" className="text-blue-600 font-bold">+ {t('addNewWorkshop')}</option>
+                                            <option value="addNew" className="text-green-600 font-bold">+ {t('addNewWorkshop')}</option>
                                         </select>
                                     </div>
                                     <div>
@@ -646,7 +646,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
         {selectedEquipment && requestType === 'oil' && (
             <div className="pt-6 border-t space-y-8">
                 <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">{t('oilLog_oilTypes')}</h3>
+                    <h3 className="text-xl font-bold text-green-600 mb-4">{t('oilLog_oilTypes')}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                             { id: 'engineOil', label: t('oilLog_engineOil') },
@@ -662,7 +662,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                                         if (e.target.checked) setSelectedOils([...selectedOils, oil.id]);
                                         else setSelectedOils(selectedOils.filter(o => o !== oil.id));
                                     }}
-                                    className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                    className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
                                 />
                                 <span className="ms-3 font-medium text-gray-700">{oil.label}</span>
                             </label>
@@ -680,7 +680,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                 </div>
 
                 <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">{t('oilLog_filters')}</h3>
+                    <h3 className="text-xl font-bold text-green-600 mb-4">{t('oilLog_filters')}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                             { id: 'oilFilter', label: t('oilLog_oilFilter') },
@@ -698,7 +698,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                                         if (e.target.checked) setSelectedFilters([...selectedFilters, filter.id]);
                                         else setSelectedFilters(selectedFilters.filter(f => f !== filter.id));
                                     }}
-                                    className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                    className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
                                 />
                                 <span className="ms-3 font-medium text-gray-700">{filter.label}</span>
                             </label>
@@ -755,7 +755,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
             <div className="pt-8 flex justify-end">
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition"
+                    className="bg-green-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg hover:bg-green-700 transition"
                 >
                     {editingRequestId ? t('updateJobCard') : t('createJobCard')}
                 </button>

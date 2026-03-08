@@ -97,7 +97,7 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                     <ShareIcon className="h-5 w-5 me-2" />
                     {t('shareOnWhatsApp')}
                 </button>
-                <button onClick={handlePrint} className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg me-2 hover:bg-blue-700">
+                <button onClick={handlePrint} className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg me-2 hover:bg-green-700">
                     <PrinterIcon className="h-5 w-5 me-2" />
                     {t('print')}
                 </button>

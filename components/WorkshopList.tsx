@@ -88,7 +88,7 @@ export const WorkshopList: React.FC<WorkshopListProps> = ({ workshops, locations
         <h1 className="text-4xl font-bold text-gray-800">{t('workshopList')}</h1>
         <button
           onClick={handleAddClick}
-          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+          className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors"
         >
           <PlusIcon className="h-5 w-5 me-2" />
           {t('addNewWorkshop')}
@@ -118,14 +118,14 @@ export const WorkshopList: React.FC<WorkshopListProps> = ({ workshops, locations
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <button 
                         onClick={() => setHistoryWorkshop(ws)}
-                        className="text-blue-600 hover:text-blue-800 font-semibold"
+                        className="text-green-600 hover:text-green-800 font-semibold"
                     >
                         {t('viewHistory')}
                     </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-2">
-                        <button onClick={() => handleEditClick(ws)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('editWorkshop')}>
+                        <button onClick={() => handleEditClick(ws)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('editWorkshop')}>
                             <PencilIcon className="h-5 w-5"/>
                         </button>
                         <button onClick={() => handleDeleteRequest(ws)} className="p-2 text-red-600 hover:text-red-900 hover:bg-red-100 rounded-full" title={t('deleteWorkshop')}>

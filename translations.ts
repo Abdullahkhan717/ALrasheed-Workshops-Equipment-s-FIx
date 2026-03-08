@@ -40,8 +40,8 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     logout: 'Logout',
     
     // Login Screen
-    login_title: 'Welcome to Equipment Fix',
-    login_subtitle: 'Please sign in to continue',
+    login_title: 'Welcome to Alrasheed workshops',
+    login_subtitle: 'For Equipment Fix',
     login_userId: 'User ID',
     login_selectUser: 'Select a User',
     login_password: 'Password',
@@ -447,8 +447,8 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     logout: 'تسجيل الخروج',
 
     // Login Screen
-    login_title: 'أهلاً بك في إصلاح المعدات',
-    login_subtitle: 'الرجاء تسجيل الدخول للمتابعة',
+    login_title: 'أهلاً بك في ورشة الرشيد',
+    login_subtitle: 'إصلاح للمعدات',
     login_userId: 'معرف المستخدم',
     login_selectUser: 'اختر مستخدم',
     login_password: 'كلمة المرور',

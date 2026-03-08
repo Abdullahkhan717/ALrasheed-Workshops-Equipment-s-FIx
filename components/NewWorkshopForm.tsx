@@ -138,7 +138,7 @@ export const NewWorkshopForm: React.FC<NewWorkshopFormProps> = ({ onClose, onAdd
               {locations.map(loc => (
                 <option key={loc.id} value={loc.name}>{loc.name}</option>
               ))}
-              <option value="addNew" className="text-blue-600 font-semibold">+ {t('addNew')}</option>
+              <option value="addNew" className="text-green-600 font-semibold">+ {t('addNew')}</option>
             </select>
           </div>
            <div>
@@ -155,7 +155,7 @@ export const NewWorkshopForm: React.FC<NewWorkshopFormProps> = ({ onClose, onAdd
           </div>
           <div className="flex justify-end pt-4">
             <button type="button" onClick={onClose} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg me-2 hover:bg-gray-300">{t('cancel')}</button>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">{isEditMode ? t('updateWorkshop') : t('addWorkshop')}</button>
+            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">{isEditMode ? t('updateWorkshop') : t('addWorkshop')}</button>
           </div>
         </form>
       </div>

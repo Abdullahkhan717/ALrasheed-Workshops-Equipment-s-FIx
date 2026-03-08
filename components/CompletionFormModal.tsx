@@ -138,7 +138,7 @@ export const CompletionFormModal: React.FC<CompletionFormModalProps> = ({ reques
                                 </div>
                             ))}
                         </div>
-                        <button type="button" onClick={() => handleAddPart(fault.id)} className="mt-2 flex items-center text-sm text-blue-600 hover:text-blue-800">
+                        <button type="button" onClick={() => handleAddPart(fault.id)} className="mt-2 flex items-center text-sm text-green-600 hover:text-green-800">
                            <PlusIcon className="h-4 w-4 me-1" /> {t('addPart')}
                         </button>
                     </div>

@@ -24,7 +24,7 @@ const NavItem: React.FC<{
         onClick={onClick}
         className={`flex items-center w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
         isActive
-            ? 'bg-blue-600 text-white'
+            ? 'bg-green-600 text-white'
             : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'
         }`}
     >
@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, onC
         `}>
             <div className="flex items-center justify-between h-20 border-b px-4">
                 <div className="flex items-center">
-                    <CogIcon className="h-8 w-8 text-blue-600" />
+                    <CogIcon className="h-8 w-8 text-green-600" />
                     <h1 className="text-xl font-bold text-gray-800 ms-2">{t('repairSystem')}</h1>
                 </div>
                 <button onClick={onClose} className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-md">
@@ -125,10 +125,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, onC
       <div className="p-4 mt-auto border-t">
         <div className="flex justify-center mb-4">
             <div className="inline-flex rounded-md shadow-sm" role="group">
-                <button type="button" onClick={() => setLanguage('en')} className={`px-4 py-2 text-sm font-medium border rounded-s-lg ${language === 'en' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'}`}>
+                <button type="button" onClick={() => setLanguage('en')} className={`px-4 py-2 text-sm font-medium border rounded-s-lg ${language === 'en' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'}`}>
                 English
                 </button>
-                <button type="button" onClick={() => setLanguage('ar')} className={`px-4 py-2 text-sm font-medium border rounded-e-lg ${language === 'ar' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'}`}>
+                <button type="button" onClick={() => setLanguage('ar')} className={`px-4 py-2 text-sm font-medium border rounded-e-lg ${language === 'ar' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'}`}>
                 العربية
                 </button>
             </div>

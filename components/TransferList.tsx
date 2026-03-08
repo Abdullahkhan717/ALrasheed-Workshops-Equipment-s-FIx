@@ -112,7 +112,7 @@ export const TransferList: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-          <ArrowsRightLeftIcon className="h-7 w-7 me-2 text-blue-600" />
+          <ArrowsRightLeftIcon className="h-7 w-7 me-2 text-green-600" />
           {t('transferRequests')}
         </h1>
         
@@ -123,7 +123,7 @@ export const TransferList: React.FC = () => {
               onClick={() => setFilter(f)}
               className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
                 filter === f 
-                  ? 'bg-white text-blue-600 shadow-sm' 
+                  ? 'bg-white text-green-600 shadow-sm' 
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -159,8 +159,8 @@ export const TransferList: React.FC = () => {
                     <tr key={req.id} className="hover:bg-gray-50 transition">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <DocumentTextIcon className="h-6 w-6 text-blue-600" />
+                          <div className="flex-shrink-0 h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <DocumentTextIcon className="h-6 w-6 text-green-600" />
                           </div>
                           <div className="ms-4">
                             <div className="text-sm font-bold text-gray-900">
@@ -176,7 +176,7 @@ export const TransferList: React.FC = () => {
                         <div className="flex items-center text-sm text-gray-900">
                           <span className="font-medium">{req.fromLocation}</span>
                           <ArrowsRightLeftIcon className="h-3 w-3 mx-2 text-gray-400" />
-                          <span className="font-medium text-blue-600">{req.toLocation}</span>
+                          <span className="font-medium text-green-600">{req.toLocation}</span>
                         </div>
                         <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
                           {req.reason}
@@ -228,7 +228,7 @@ export const TransferList: React.FC = () => {
                           )}
 
                           {req.status.toLowerCase() !== 'pending' && (
-                            <button className="text-blue-600 hover:text-blue-800">
+                            <button className="text-green-600 hover:text-green-800">
                               {t('viewDetails')}
                             </button>
                           )}

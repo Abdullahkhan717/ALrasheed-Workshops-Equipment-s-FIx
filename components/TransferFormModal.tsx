@@ -73,7 +73,7 @@ export const TransferFormModal: React.FC<TransferFormModalProps> = ({ equipment,
             <select
               value={toLocation}
               onChange={(e) => setToLocation(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
               required
             >
               <option value="">{t('selectLocation')}</option>
@@ -88,7 +88,7 @@ export const TransferFormModal: React.FC<TransferFormModalProps> = ({ equipment,
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
               rows={3}
               required
             />
@@ -99,7 +99,7 @@ export const TransferFormModal: React.FC<TransferFormModalProps> = ({ equipment,
             <textarea
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
               rows={2}
             />
           </div>
@@ -115,7 +115,7 @@ export const TransferFormModal: React.FC<TransferFormModalProps> = ({ equipment,
             <button
               type="submit"
               disabled={isSaving}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
             >
               {isSaving ? t('saving') : t('save')}
             </button>

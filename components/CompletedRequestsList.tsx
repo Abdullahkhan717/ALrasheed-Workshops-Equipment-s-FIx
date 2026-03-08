@@ -78,7 +78,7 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
                     <button onClick={() => handleShare(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('shareViaWhatsApp')}>
                         <WhatsappIcon className="h-5 w-5"/>
                     </button>
-                    <button onClick={() => setRequestToPrint(request)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('printJobCard')}>
+                    <button onClick={() => setRequestToPrint(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('printJobCard')}>
                         <PrinterIcon className="h-5 w-5"/>
                     </button>
                   </td>

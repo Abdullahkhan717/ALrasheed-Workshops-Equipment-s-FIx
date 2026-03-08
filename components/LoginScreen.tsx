@@ -79,9 +79,14 @@ export const LoginScreen: React.FC = () => {
             <LanguageIcon className="h-4 w-4 mr-1" />
             <span>{language === 'en' ? 'العربية' : 'English'}</span>
           </button>
-          <img src="/alrasheed-logo.png" alt="Al Rasheed Logo" className="w-24 h-24 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-800">Welcome to Equipment Fix</h1>
-          <p className="text-lg text-gray-600">Alrasheed Workshop</p>
+          
+          {/* Logo AR Green + White */}
+          <div className="w-24 h-24 mx-auto mb-4 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+            <span className="text-4xl font-black text-white">AR</span>
+          </div>
+          
+          <h1 className="text-2xl font-bold text-gray-800">{t('login_title')}</h1>
+          <p className="text-lg text-gray-600 font-medium">{t('login_subtitle')}</p>
         </div>
         
         {!showCreateUser ? (
@@ -92,7 +97,7 @@ export const LoginScreen: React.FC = () => {
                     id="userId" 
                     value={selectedUserId}
                     onChange={(e) => setSelectedUserId(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                 >
                     <option value="">{t('login_selectUser')}</option>
                     {activeUsers.map(user => <option key={user.id} value={user.id}>{user.id}</option>)}
@@ -106,7 +111,7 @@ export const LoginScreen: React.FC = () => {
                         id="password" 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
                     />
                     <button
                         type="button"
@@ -119,18 +124,18 @@ export const LoginScreen: React.FC = () => {
             </div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                    <input id="saveLogin" type="checkbox" checked={saveLogin} onChange={(e) => setSaveLogin(e.target.checked)} className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                    <input id="saveLogin" type="checkbox" checked={saveLogin} onChange={(e) => setSaveLogin(e.target.checked)} className="h-4 w-4 text-green-600 border-gray-300 rounded" />
                     <label htmlFor="saveLogin" className="ms-2 block text-sm text-gray-900">{t('login_saveLogin')}</label>
                 </div>
             </div>
             <div>
-                <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
                     <ArrowRightOnRectangleIcon className="h-5 w-5 me-2" />
                     {t('login_button')}
                 </button>
             </div>
             <div className="text-center">
-                <button type="button" onClick={() => setShowCreateUser(true)} className="font-medium text-sm text-blue-600 hover:text-blue-500">
+                <button type="button" onClick={() => setShowCreateUser(true)} className="font-medium text-sm text-green-600 hover:text-green-500">
                     {t('login_createUser')}
                 </button>
             </div>
@@ -175,7 +180,7 @@ export const LoginScreen: React.FC = () => {
                     </select>
                 </div>
                  <div>
-                    <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                    <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
                         <UserCircleIcon className="h-5 w-5 me-2" />
                        {t('createUser_button')}
                     </button>

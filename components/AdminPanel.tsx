@@ -110,14 +110,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ users }) => {
                   <td className="px-6 py-4 font-medium">{user.id}</td>
                   <td className="px-6 py-4 font-mono text-gray-600">{user.password}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'admin' ? 'bg-green-200 text-green-900' : 'bg-green-100 text-green-800'}`}>
                         {t(user.role) || user.role}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm">{user.location || '-'}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
-                      <button onClick={() => setUserToEdit(user)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('edit')}>
+                      <button onClick={() => setUserToEdit(user)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('edit')}>
                           <PencilIcon className="h-5 w-5"/>
                       </button>
                       {user.role !== 'admin' && (

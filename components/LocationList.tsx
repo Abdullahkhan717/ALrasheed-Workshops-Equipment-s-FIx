@@ -59,7 +59,7 @@ export const LocationList: React.FC<LocationListProps> = ({ onSelectLocation }) 
             setLocationToEdit(null);
             setIsFormOpen(true);
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center shadow-md transition w-full sm:w-auto justify-center"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center shadow-md transition w-full sm:w-auto justify-center"
         >
           <PlusIcon className="h-5 w-5 me-2" />
           {t('addNewLocation')}
@@ -76,13 +76,13 @@ export const LocationList: React.FC<LocationListProps> = ({ onSelectLocation }) 
           {locations.map((location) => (
             <div 
               key={location.id} 
-              className="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500 hover:shadow-lg transition cursor-pointer"
+              className="bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500 hover:shadow-lg transition cursor-pointer"
               onClick={() => onSelectLocation?.(location.name)}
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center">
-                    <div className="bg-blue-100 p-2 rounded-lg me-3">
-                        <MapPinIcon className="h-6 w-6 text-blue-600" />
+                    <div className="bg-green-100 p-2 rounded-lg me-3">
+                        <MapPinIcon className="h-6 w-6 text-green-600" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-gray-800">{location.name}</h3>
@@ -95,7 +95,7 @@ export const LocationList: React.FC<LocationListProps> = ({ onSelectLocation }) 
                       setLocationToEdit(location);
                       setIsFormOpen(true);
                     }}
-                    className="text-blue-600 hover:text-blue-800 p-1"
+                    className="text-green-600 hover:text-green-800 p-1"
                     title={t('edit')}
                   >
                     <PencilSquareIcon className="h-5 w-5" />

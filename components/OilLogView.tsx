@@ -194,7 +194,7 @@ export const OilLogView: React.FC = () => {
                     type="checkbox"
                     checked={oilTypes.includes(option.id)}
                     onChange={() => handleToggleOilType(option.id)}
-                    className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    className="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500"
                   />
                   <span className="text-gray-700">{option.label}</span>
                 </label>
@@ -221,7 +221,7 @@ export const OilLogView: React.FC = () => {
                     type="checkbox"
                     checked={filters.includes(option.id)}
                     onChange={() => handleToggleFilter(option.id)}
-                    className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    className="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500"
                   />
                   <span className="text-gray-700">{option.label}</span>
                 </label>
@@ -244,7 +244,7 @@ export const OilLogView: React.FC = () => {
           <button
             type="submit"
             disabled={isSaving}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+            className="bg-green-600 text-white px-8 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
           >
             {isSaving ? 'Saving...' : t('oilLog_save')}
           </button>

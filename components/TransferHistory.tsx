@@ -37,8 +37,8 @@ export const TransferHistory: React.FC = () => {
                 <tr key={req.id} className="hover:bg-gray-50 transition">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <DocumentTextIcon className="h-6 w-6 text-blue-600" />
+                      <div className="flex-shrink-0 h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <DocumentTextIcon className="h-6 w-6 text-green-600" />
                       </div>
                       <div className="ms-4">
                         <div className="text-sm font-bold text-gray-900">
@@ -54,7 +54,7 @@ export const TransferHistory: React.FC = () => {
                     <div className="flex items-center text-sm text-gray-900">
                       <span>{req.fromLocation}</span>
                       <ArrowsRightLeftIcon className="h-3 w-3 mx-2 text-gray-400" />
-                      <span className="text-blue-600">{req.toLocation}</span>
+                      <span className="text-green-600">{req.toLocation}</span>
                     </div>
                     <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
                       {req.reason}

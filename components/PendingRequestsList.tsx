@@ -148,7 +148,7 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         request.applicationStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        request.applicationStatus === 'Accepted' ? 'bg-blue-100 text-blue-800' :
+                        request.applicationStatus === 'Accepted' ? 'bg-green-100 text-green-800' :
                         request.applicationStatus === 'Rejected' ? 'bg-orange-100 text-orange-800' :
                         'bg-red-100 text-red-800'
                     }`}>
@@ -204,7 +204,7 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                     <button onClick={() => handleShare(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('shareViaWhatsApp')}>
                         <WhatsappIcon className="h-5 w-5"/>
                     </button>
-                    <button onClick={() => setRequestToPrint(request)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('printJobCard')}>
+                    <button onClick={() => setRequestToPrint(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('printJobCard')}>
                         <PrinterIcon className="h-5 w-5"/>
                     </button>
                    </div>

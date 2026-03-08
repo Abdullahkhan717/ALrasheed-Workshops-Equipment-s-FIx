@@ -189,7 +189,7 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                         setSearchQuery('');
                         setIsSearchFocused(false);
                       }}
-                      className="p-3 border-b hover:bg-blue-50 cursor-pointer"
+                      className="p-3 border-b hover:bg-green-50 cursor-pointer"
                     >
                       <p className="font-semibold">
                         {useTranslation().language === 'ar' && eq.arabicName ? eq.arabicName : eq.equipmentNumber} ({t(eq.equipmentType)})
@@ -203,7 +203,7 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors"
           >
             <PlusIcon className="h-5 w-5 me-2" />
             {t('addNewEquipment')}
@@ -259,7 +259,7 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center space-x-2">
                             {isHomeBranch(equipment.branchLocation) && (
-                                <button onClick={() => handleEditClick(equipment)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('editEquipment')}>
+                                <button onClick={() => handleEditClick(equipment)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('editEquipment')}>
                                     <PencilIcon className="h-5 w-5"/>
                                 </button>
                             )}
@@ -297,17 +297,17 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                 <div key={equipment.id} className="bg-white rounded-xl shadow-md p-4 space-y-3">
                     <div className="flex justify-between items-start">
                         <div>
-                            <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">{t(equipment.equipmentType)}</span>
+                            <span className="text-xs font-semibold text-green-600 uppercase tracking-wider">{t(equipment.equipmentType)}</span>
                             <h3 className="text-lg font-bold text-gray-900">
                                 {useTranslation().language === 'ar' && equipment.arabicName ? equipment.arabicName : equipment.equipmentNumber}
                             </h3>
                         </div>
                         <div className="flex space-x-1">
-                            <button onClick={() => setSelectedEquipmentId(equipment.id)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-full" title={t('viewDetails')}>
+                            <button onClick={() => setSelectedEquipmentId(equipment.id)} className="p-2 text-green-600 hover:bg-green-50 rounded-full" title={t('viewDetails')}>
                                 <EyeIcon className="h-5 w-5"/>
                             </button>
                             {isHomeBranch(equipment.branchLocation) && (
-                                <button onClick={() => handleEditClick(equipment)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
+                                <button onClick={() => handleEditClick(equipment)} className="p-2 text-green-600 hover:bg-green-50 rounded-full">
                                     <PencilIcon className="h-5 w-5"/>
                                 </button>
                             )}
@@ -352,7 +352,7 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                         <div className="pt-2 border-t border-gray-100">
                             <button 
                                 onClick={() => onNewRepairRequest?.(equipment.id)}
-                                className="w-full bg-blue-600 text-white py-2 rounded-lg font-bold flex items-center justify-center"
+                                className="w-full bg-green-600 text-white py-2 rounded-lg font-bold flex items-center justify-center"
                             >
                                 <WrenchScrewdriverIcon className="h-4 w-4 me-2" />
                                 {t('newRepairRequest')}

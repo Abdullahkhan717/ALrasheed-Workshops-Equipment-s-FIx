@@ -67,7 +67,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
               id="locationName"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
               placeholder={t('locationNamePlaceholder')}
               required
             />
@@ -79,7 +79,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
               id="locationType"
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
               placeholder="e.g., Construction Site, Office"
             />
           </div>
@@ -90,7 +90,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
               id="siteManager"
               value={siteManager}
               onChange={(e) => setSiteManager(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
               placeholder={t('siteManagerPlaceholder')}
             />
           </div>
@@ -100,7 +100,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
                 <label className="inline-flex items-center">
                     <input
                         type="radio"
-                        className="form-radio h-4 w-4 text-blue-600"
+                        className="form-radio h-4 w-4 text-green-600"
                         name="hasWorkshop"
                         checked={hasWorkshop === true}
                         onChange={() => setHasWorkshop(true)}
@@ -110,7 +110,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
                 <label className="inline-flex items-center">
                     <input
                         type="radio"
-                        className="form-radio h-4 w-4 text-blue-600"
+                        className="form-radio h-4 w-4 text-green-600"
                         name="hasWorkshop"
                         checked={hasWorkshop === false}
                         onChange={() => setHasWorkshop(false)}
@@ -127,7 +127,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
                 id="workshopManager"
                 value={workshopManager}
                 onChange={(e) => setWorkshopManager(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 placeholder={t('workshopManagerPlaceholder')}
                 required={hasWorkshop}
               />
@@ -135,7 +135,7 @@ export const NewLocationForm: React.FC<NewLocationFormProps> = ({ onClose, onAdd
           )}
           <div className="flex justify-end pt-4">
             <button type="button" onClick={onClose} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg me-2 hover:bg-gray-300">{t('cancel')}</button>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">{isEditMode ? t('save') : t('save')}</button>
+            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">{isEditMode ? t('save') : t('save')}</button>
           </div>
         </form>
       </div>

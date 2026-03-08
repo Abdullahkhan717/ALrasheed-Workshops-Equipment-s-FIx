@@ -85,7 +85,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClos
             <button type="button" onClick={onClose} className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">
                 {t('cancel')}
             </button>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
                 {t('save')}
             </button>
         </div>

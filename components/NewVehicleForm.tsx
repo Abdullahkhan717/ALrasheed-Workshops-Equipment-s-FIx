@@ -112,7 +112,7 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
               id="equipmentType"
               value={equipmentType}
               onChange={(e) => setEquipmentType(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
               {PRESET_TYPES.map(type => <option key={type} value={type}>{t(type)}</option>)}
               <option value="AddNew">{t('addNew')}</option>
@@ -208,7 +208,7 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
                     setBranchLocation(e.target.value);
                 }
               }}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
               <option value="">{t('location')}</option>
               {locations.map(loc => (
@@ -223,7 +223,7 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
               id="condition"
               value={condition}
               onChange={(e) => setCondition(e.target.value as Equipment['condition'])}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
               <option value="Working">{t('working')}</option>
               <option value="Ready for work">{t('readyForWork')}</option>
@@ -233,7 +233,7 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
           </div>
           <div className="flex justify-end pt-4">
             <button type="button" onClick={onClose} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg me-2 hover:bg-gray-300">{t('cancel')}</button>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">{isEditMode ? t('updateEquipment') : t('addEquipment')}</button>
+            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">{isEditMode ? t('updateEquipment') : t('addEquipment')}</button>
           </div>
         </form>
       </div>

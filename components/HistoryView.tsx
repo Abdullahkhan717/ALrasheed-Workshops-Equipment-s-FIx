@@ -146,7 +146,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
             id="equipment-select"
             value={selectedEquipmentId}
             onChange={e => setSelectedEquipmentId(e.target.value)}
-            className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           >
             <option value="">{t('allEquipment')}</option>
             {equipments.map(e => (
@@ -162,7 +162,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
             id="workshop-select"
             value={selectedWorkshopId}
             onChange={e => setSelectedWorkshopId(e.target.value)}
-            className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           >
             <option value="">{t('allWorkshops')}</option>
             {workshops.map(w => (
@@ -177,19 +177,19 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
           <div className="flex space-x-2">
             <button
               onClick={() => setTimeFilter('all')}
-              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'all' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'all' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
             >
               {t('history_all')}
             </button>
             <button
               onClick={() => setTimeFilter('daily')}
-              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'daily' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'daily' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
             >
               {t('history_daily')}
             </button>
             <button
               onClick={() => setTimeFilter('monthly')}
-              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'monthly' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'monthly' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
             >
               {t('history_monthly')}
             </button>
@@ -204,7 +204,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                 id="month-select"
                 value={selectedMonth}
                 onChange={e => setSelectedMonth(e.target.value)}
-                className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
               />
             </>
           )}
@@ -216,7 +216,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                 id="date-select"
                 value={selectedDate}
                 onChange={e => setSelectedDate(e.target.value)}
-                className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
               />
             </>
           )}
@@ -230,7 +230,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-bold text-lg text-gray-800">
-                    {!selectedEquipmentId && <span className="text-blue-600 font-semibold block mb-1">{getEquipmentInfo(req.equipmentId)}</span>}
+                    {!selectedEquipmentId && <span className="text-green-600 font-semibold block mb-1">{getEquipmentInfo(req.equipmentId)}</span>}
                     {t('requestId')}: {req.id}
                   </p>
                   <p className="text-sm text-gray-500">{t('dateIn')}: {req.dateIn} at {req.timeIn}</p>
@@ -238,7 +238,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                 <div className="flex items-center space-x-2">
                     <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
                         req.applicationStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        req.applicationStatus === 'Accepted' ? 'bg-blue-100 text-blue-800' :
+                        req.applicationStatus === 'Accepted' ? 'bg-green-100 text-green-800' :
                         req.applicationStatus === 'Rejected' ? 'bg-orange-100 text-orange-800' :
                         'bg-red-100 text-red-800'
                     }`}>
@@ -273,7 +273,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                           setTranslatedTexts(prev => ({ ...prev, [f.id]: translation }));
                           setTranslating(null);
                         }}
-                        className="text-xs text-blue-500 ml-2"
+                        className="text-xs text-green-500 ml-2"
                         disabled={translating === f.id}
                       >
                         {translating === f.id ? 'Translating...' : 'Translate'}

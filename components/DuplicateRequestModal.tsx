@@ -38,7 +38,7 @@ export const DuplicateRequestModal: React.FC<DuplicateRequestModalProps> = ({ re
         <p className="text-gray-600 mb-6">{t('howToProceed')}</p>
 
         <div className="flex justify-end space-x-4">
-          <button onClick={onAddFault} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+          <button onClick={onAddFault} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
             {t('addFaultToRequest')}
           </button>
           <button onClick={onCreateNew} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">

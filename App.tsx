@@ -188,19 +188,19 @@ const AppContent: React.FC = () => {
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               <div className="flex border-b">
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${historyTab === 'repair' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-6 py-3 text-sm font-medium ${historyTab === 'repair' ? 'border-b-2 border-green-600 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setHistoryTab('repair')}
                 >
                   {t('repairHistory')}
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${historyTab === 'transfer' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-6 py-3 text-sm font-medium ${historyTab === 'transfer' ? 'border-b-2 border-green-600 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setHistoryTab('transfer')}
                 >
                   {t('transferHistory')}
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${historyTab === 'oil' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-6 py-3 text-sm font-medium ${historyTab === 'oil' ? 'border-b-2 border-green-600 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setHistoryTab('oil')}
                 >
                   {t('oilLogHistory')}
@@ -306,10 +306,10 @@ const AppContent: React.FC = () => {
                 {(receivedRepairRequests.length > 0 || receivedTransferRequests.length > 0) && (
                     <div className="mb-6 space-y-2">
                         {receivedRepairRequests.length > 0 && (
-                            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm animate-fade-in-up">
+                            <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm animate-fade-in-up">
                                 <div className="flex items-center">
-                                    <WrenchScrewdriverIcon className="h-5 w-5 text-blue-500 me-3" />
-                                    <p className="text-blue-700 font-bold">
+                                    <WrenchScrewdriverIcon className="h-5 w-5 text-green-500 me-3" />
+                                    <p className="text-green-700 font-bold">
                                         {language === 'ar' 
                                             ? `لديك ${receivedRepairRequests.length} طلبات إصلاح واردة جديدة!` 
                                             : `You have ${receivedRepairRequests.length} new incoming repair requests!`}
@@ -318,10 +318,10 @@ const AppContent: React.FC = () => {
                             </div>
                         )}
                         {receivedTransferRequests.length > 0 && (
-                            <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg shadow-sm animate-fade-in-up">
+                            <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm animate-fade-in-up">
                                 <div className="flex items-center">
-                                    <TruckIcon className="h-5 w-5 text-indigo-500 me-3" />
-                                    <p className="text-indigo-700 font-bold">
+                                    <TruckIcon className="h-5 w-5 text-green-500 me-3" />
+                                    <p className="text-green-700 font-bold">
                                         {language === 'ar' 
                                             ? `لديك ${receivedTransferRequests.length} طلبات تحويل واردة جديدة!` 
                                             : `You have ${receivedTransferRequests.length} new incoming transfer requests!`}
@@ -335,7 +335,7 @@ const AppContent: React.FC = () => {
                 <div className="mb-8 bg-white p-6 rounded-xl shadow-md">
                     {!selectedEquipment ? (
                         <>
-                            <h2 className="text-xl font-bold text-blue-600 mb-1">{t('dashboard_findJobCard')}</h2>
+                            <h2 className="text-xl font-bold text-green-600 mb-1">{t('dashboard_findJobCard')}</h2>
                             <p className="text-gray-500 mb-4 text-sm font-medium">Search by Equipment number or Serial Number</p>
                             <form onSubmit={handleEquipmentSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 relative">
                             <div className="relative w-full">
@@ -346,7 +346,7 @@ const AppContent: React.FC = () => {
                                   onChange={(e) => setSearchEquipmentQuery(e.target.value)}
                                   onFocus={() => setIsSearchFocused(true)}
                                   onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                               />
                               {isSearchFocused && searchEquipmentQuery.trim() && (
                                 <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-md shadow-lg z-20 max-h-60 overflow-y-auto">
@@ -370,7 +370,7 @@ const AppContent: React.FC = () => {
                                       <div 
                                         key={`${eq.id}-${index}`} 
                                         onClick={() => handleSelectEquipment(eq)}
-                                        className="p-3 border-b hover:bg-blue-50 cursor-pointer"
+                                        className="p-3 border-b hover:bg-green-50 cursor-pointer"
                                       >
                                         <p className="font-semibold">
                                           {language === 'ar' && eq.arabicName ? eq.arabicName : `${eq.equipmentNumber} (${t(eq.equipmentType)})`}
@@ -390,7 +390,7 @@ const AppContent: React.FC = () => {
                                 </div>
                               )}
                             </div>
-                            <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center shrink-0 font-bold">
+                            <button type="submit" className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center justify-center shrink-0 font-bold">
                                 <SearchIcon className="h-5 w-5 me-2" />
                                 {t('search')}
                             </button>
@@ -415,16 +415,16 @@ const AppContent: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                    <button onClick={() => setActiveView('pending')} className="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500 hover:bg-gray-50 transition text-start">
-                        <h3 className="font-bold text-blue-600 mb-2">{t('receivedRepairRequest')}</h3>
+                    <button onClick={() => setActiveView('pending')} className="bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500 hover:bg-gray-50 transition text-start">
+                        <h3 className="font-bold text-green-600 mb-2">{t('receivedRepairRequest')}</h3>
                         <p className="text-3xl font-black text-gray-800">{receivedRepairRequests.length}</p>
                     </button>
                     <button onClick={() => setActiveView('outsourcedLog')} className="bg-white p-6 rounded-xl shadow-md border-t-4 border-orange-500 hover:bg-gray-50 transition text-start">
                         <h3 className="font-bold text-orange-600 mb-2">{t('outsourcedRepairLog')}</h3>
                         <p className="text-3xl font-black text-gray-800">{outsourcedRepairRequests.length}</p>
                     </button>
-                    <button onClick={() => setActiveView('transfers')} className="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-500 hover:bg-gray-50 transition text-start">
-                        <h3 className="font-bold text-indigo-600 mb-2">{t('receivedTransferRequests')}</h3>
+                    <button onClick={() => setActiveView('transfers')} className="bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500 hover:bg-gray-50 transition text-start">
+                        <h3 className="font-bold text-green-600 mb-2">{t('receivedTransferRequests')}</h3>
                         <p className="text-3xl font-black text-gray-800">{receivedTransferRequests.length}</p>
                     </button>
                     <button onClick={() => {
@@ -438,8 +438,8 @@ const AppContent: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                     <button onClick={() => setActiveView('fleet')} className="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4 w-full text-start hover:bg-gray-50 transition">
-                        <div className="bg-blue-100 p-3 rounded-full">
-                            <TruckIcon className="h-8 w-8 text-blue-500" />
+                        <div className="bg-green-100 p-3 rounded-full">
+                            <TruckIcon className="h-8 w-8 text-green-500" />
                         </div>
                         <div>
                             <p className="text-gray-500 text-sm">{t('dashboard_totalEquipment')}</p>
@@ -465,8 +465,8 @@ const AppContent: React.FC = () => {
                         </div>
                     </button>
                     <button onClick={() => setActiveView('workshops')} className="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4 w-full text-start hover:bg-gray-50 transition">
-                        <div className="bg-indigo-100 p-3 rounded-full">
-                            <BuildingStorefrontIcon className="h-8 w-8 text-indigo-500" />
+                        <div className="bg-green-100 p-3 rounded-full">
+                            <BuildingStorefrontIcon className="h-8 w-8 text-green-500" />
                         </div>
                         <div>
                             <p className="text-gray-500 text-sm">{t('dashboard_totalWorkshops')}</p>
@@ -483,7 +483,7 @@ const AppContent: React.FC = () => {
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100">
             <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
                 <h1 className="text-2xl font-bold text-gray-800 mb-2">Loading Data...</h1>
                 <p className="text-gray-600">Please wait while we fetch the latest information from your workshop records.</p>
             </div>
@@ -499,7 +499,7 @@ const AppContent: React.FC = () => {
                 <p className="mb-6 text-gray-700">{error.message}</p>
                 <button 
                     onClick={() => refetchData()} 
-                    className="bg-blue-600 text-white px-8 py-2 rounded-lg hover:bg-blue-700 transition shadow-md"
+                    className="bg-green-600 text-white px-8 py-2 rounded-lg hover:bg-green-700 transition shadow-md"
                 >
                     Try Again
                 </button>
