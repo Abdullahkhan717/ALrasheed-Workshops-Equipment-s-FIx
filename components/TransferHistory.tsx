@@ -3,13 +3,20 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useData } from '../context/DataContext';
 import { ArrowsRightLeftIcon, DocumentTextIcon } from './Icons';
 
-export const TransferHistory: React.FC = () => {
+interface TransferHistoryProps {
+  selectedEquipmentId?: string;
+}
+
+export const TransferHistory: React.FC<TransferHistoryProps> = ({ selectedEquipmentId }) => {
   const { t } = useTranslation();
   const { transferRequests, equipments } = useData();
 
-  const completedTransfers = transferRequests.filter(req => 
-    req.status.toLowerCase() === 'accepted' || req.status.toLowerCase() === 'rejected'
-  ).sort((a, b) => new Date(b.approvalDate || '').getTime() - new Date(a.approvalDate || '').getTime());
+  const completedTransfers = transferRequests.filter(req => {
+    const isCompleted = req.status.toLowerCase() === 'accepted' || req.status.toLowerCase() === 'rejected';
+    if (!isCompleted) return false;
+    if (selectedEquipmentId && req.equipmentId !== selectedEquipmentId) return false;
+    return true;
+  }).sort((a, b) => new Date(b.dateAccepted || b.approvalDate || '').getTime() - new Date(a.dateAccepted || a.approvalDate || '').getTime());
 
   return (
     <div className="overflow-x-auto">
@@ -63,13 +70,13 @@ export const TransferHistory: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{req.requesterName}</div>
                     <div className="text-xs text-gray-500">
-                      {new Date(req.requestDate).toLocaleDateString()}
+                      {new Date(req.dateRequested || req.requestDate).toLocaleDateString()}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{req.approvedBy || '-'}</div>
+                    <div className="text-sm text-gray-900">{req.approver || req.acceptedBy || req.approvedBy || '-'}</div>
                     <div className="text-xs text-gray-500">
-                      {req.approvalDate ? new Date(req.approvalDate).toLocaleDateString() : '-'}
+                      {req.dateAccepted ? new Date(req.dateAccepted).toLocaleDateString() : (req.approvalDate ? new Date(req.approvalDate).toLocaleDateString() : '-')}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

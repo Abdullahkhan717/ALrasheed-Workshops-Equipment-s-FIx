@@ -46,6 +46,9 @@ const AppContent: React.FC = () => {
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [transferEquipment, setTransferEquipment] = useState<Equipment | null>(null);
   const [historyTab, setHistoryTab] = useState<'repair' | 'transfer' | 'oil'>('repair');
+  const [selectedHistoryEquipmentId, setSelectedHistoryEquipmentId] = useState('');
+  const [searchHistoryEquipmentQuery, setSearchHistoryEquipmentQuery] = useState('');
+  const [isHistorySearchFocused, setIsHistorySearchFocused] = useState(false);
 
 
   const { language } = useLanguage();
@@ -207,9 +210,58 @@ const AppContent: React.FC = () => {
                 </button>
               </div>
               <div className="p-6">
-                {historyTab === 'repair' && <HistoryView equipments={equipments} workshops={workshops} repairRequests={repairRequests} onUpdateRequest={handleUpdateRequest} />}
-                {historyTab === 'transfer' && <TransferHistory />}
-                {historyTab === 'oil' && <OilLogHistoryView />}
+                <div className="mb-6 relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('selectEquipmentToFilter')}</label>
+                  <div className="relative">
+                    <input 
+                      type="text"
+                      placeholder={t('searchByEquipmentOrSerial')}
+                      value={searchHistoryEquipmentQuery}
+                      onChange={(e) => setSearchHistoryEquipmentQuery(e.target.value)}
+                      onFocus={() => setIsHistorySearchFocused(true)}
+                      onBlur={() => setTimeout(() => setIsHistorySearchFocused(false), 200)}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                    />
+                    {isHistorySearchFocused && searchHistoryEquipmentQuery.trim() && (
+                      <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-md shadow-lg z-20 max-h-60 overflow-y-auto">
+                        <div 
+                          className="p-3 border-b hover:bg-green-50 cursor-pointer text-gray-500 italic"
+                          onClick={() => {
+                            setSelectedHistoryEquipmentId('');
+                            setSearchHistoryEquipmentQuery('');
+                          }}
+                        >
+                          {t('allEquipment')}
+                        </div>
+                        {equipments
+                          .filter(eq => 
+                            String(eq.equipmentNumber || '').toLowerCase().includes(searchHistoryEquipmentQuery.toLowerCase()) ||
+                            String(eq.serialNumber || '').toLowerCase().includes(searchHistoryEquipmentQuery.toLowerCase())
+                          )
+                          .slice(0, 10)
+                          .map((eq, index) => (
+                            <div 
+                              key={`${eq.id}-${index}`} 
+                              onClick={() => {
+                                setSelectedHistoryEquipmentId(eq.id);
+                                setSearchHistoryEquipmentQuery(language === 'ar' ? (eq.arabicName ? `${eq.arabicName} ${eq.equipmentNumber}` : `${t(eq.equipmentType)} ${eq.equipmentNumber}`) : `${eq.equipmentNumber} (${t(eq.equipmentType)})`);
+                              }}
+                              className="p-3 border-b hover:bg-green-50 cursor-pointer"
+                            >
+                              <p className="font-semibold">
+                                {language === 'ar' ? (eq.arabicName ? `${eq.arabicName} ${eq.equipmentNumber}` : `${t(eq.equipmentType)} ${eq.equipmentNumber}`) : `${eq.equipmentNumber} (${t(eq.equipmentType)})`}
+                              </p>
+                              <p className="text-sm text-gray-500">{eq.serialNumber}</p>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {historyTab === 'repair' && <HistoryView equipments={equipments} workshops={workshops} repairRequests={repairRequests} onUpdateRequest={handleUpdateRequest} selectedEquipmentId={selectedHistoryEquipmentId} />}
+                {historyTab === 'transfer' && <TransferHistory selectedEquipmentId={selectedHistoryEquipmentId} />}
+                {historyTab === 'oil' && <OilLogHistoryView selectedEquipmentId={selectedHistoryEquipmentId} />}
               </div>
             </div>
           </div>
@@ -373,7 +425,7 @@ const AppContent: React.FC = () => {
                                         className="p-3 border-b hover:bg-green-50 cursor-pointer"
                                       >
                                         <p className="font-semibold">
-                                          {language === 'ar' && eq.arabicName ? eq.arabicName : (language === 'ar' ? `${t(eq.equipmentType)} ${eq.equipmentNumber}` : `${eq.equipmentNumber} (${t(eq.equipmentType)})`)}
+                                          {language === 'ar' ? (eq.arabicName ? `${eq.arabicName} ${eq.equipmentNumber}` : `${t(eq.equipmentType)} ${eq.equipmentNumber}`) : `${eq.equipmentNumber} (${t(eq.equipmentType)})`}
                                         </p>
                                         <p className="text-sm text-gray-500">{eq.serialNumber}</p>
                                       </div>

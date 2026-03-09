@@ -4,10 +4,19 @@ import { useTranslation } from '../hooks/useTranslation';
 import { OilLogView } from './OilLogView';
 import { PlusIcon } from './Icons';
 
-export const OilLogHistoryView: React.FC = () => {
+interface OilLogHistoryViewProps {
+  selectedEquipmentId?: string;
+}
+
+export const OilLogHistoryView: React.FC<OilLogHistoryViewProps> = ({ selectedEquipmentId }) => {
   const { t, language } = useTranslation();
   const { oilLogs, equipments } = useData();
   const [showForm, setShowForm] = useState(false);
+
+  const filteredLogs = oilLogs.filter(log => {
+    if (selectedEquipmentId && log.equipmentId !== selectedEquipmentId) return false;
+    return true;
+  }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   if (showForm) {
     return (
@@ -39,9 +48,8 @@ export const OilLogHistoryView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {oilLogs.length > 0 ? (
-          oilLogs
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        {filteredLogs.length > 0 ? (
+          filteredLogs
             .map(log => {
               const equipment = equipments.find(e => e.id === log.equipmentId);
               return (

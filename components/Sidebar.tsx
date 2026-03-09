@@ -54,9 +54,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, onC
             lg:translate-x-0 lg:static lg:inset-0
         `}>
             <div className="flex items-center justify-between h-20 border-b px-4">
-                <div className="flex items-center">
-                    <CogIcon className="h-8 w-8 text-green-600" />
-                    <h1 className="text-xl font-bold text-gray-800 ms-2">{t('repairSystem')}</h1>
+                <div className="flex flex-col">
+                    <div className="flex items-center">
+                        <CogIcon className="h-8 w-8 text-green-600" />
+                        <h1 className="text-xl font-bold text-gray-800 ms-2">{t('repairSystem')}</h1>
+                    </div>
+                    {currentUser && (
+                        <p className="text-xs text-gray-500 ms-10 -mt-1 font-medium">
+                            ID: {currentUser.id}
+                        </p>
+                    )}
                 </div>
                 <button onClick={onClose} className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-md">
                     <XMarkIcon className="h-6 w-6" />

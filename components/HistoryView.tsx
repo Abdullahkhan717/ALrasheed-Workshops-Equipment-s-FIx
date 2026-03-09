@@ -13,10 +13,14 @@ interface HistoryViewProps {
   workshops: Workshop[];
   repairRequests: RepairRequest[];
   onUpdateRequest: (request: RepairRequest) => Promise<void>;
+  selectedEquipmentId?: string;
 }
 
-export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops, repairRequests, onUpdateRequest }) => {
-  const [selectedEquipmentId, setSelectedEquipmentId] = useState('');
+export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops, repairRequests, onUpdateRequest, selectedEquipmentId: propSelectedEquipmentId }) => {
+  const [internalSelectedEquipmentId, setInternalSelectedEquipmentId] = useState('');
+  const selectedEquipmentId = propSelectedEquipmentId !== undefined ? propSelectedEquipmentId : internalSelectedEquipmentId;
+  const setSelectedEquipmentId = propSelectedEquipmentId !== undefined ? () => {} : setInternalSelectedEquipmentId;
+  
   const [requestToPrint, setRequestToPrint] = useState<RepairRequest | null>(null);
   const [requestToShare, setRequestToShare] = useState<RepairRequest | null>(null);
   const [requestToComplete, setRequestToComplete] = useState<RepairRequest | null>(null);
@@ -139,23 +143,25 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
         />
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div>
-          <label htmlFor="equipment-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectEquipmentToFilter')}</label>
-          <select
-            id="equipment-select"
-            value={selectedEquipmentId}
-            onChange={e => setSelectedEquipmentId(e.target.value)}
-            className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-          >
-            <option value="">{t('allEquipment')}</option>
-            {equipments.map(e => (
-              <option key={e.id} value={e.id}>
-                {e.equipmentType} - {e.equipmentNumber}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {propSelectedEquipmentId === undefined && (
+          <div>
+            <label htmlFor="equipment-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectEquipmentToFilter')}</label>
+            <select
+              id="equipment-select"
+              value={selectedEquipmentId}
+              onChange={e => setSelectedEquipmentId(e.target.value)}
+              className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+            >
+              <option value="">{t('allEquipment')}</option>
+              {equipments.map(e => (
+                <option key={e.id} value={e.id}>
+                  {e.equipmentType} - {e.equipmentNumber}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div>
           <label htmlFor="workshop-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectWorkshop')}</label>
           <select

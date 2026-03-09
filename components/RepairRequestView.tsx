@@ -401,7 +401,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                                             className="p-3 border-b hover:bg-green-50 cursor-pointer"
                                         >
                                             <p className="font-semibold">
-                                                {language === 'ar' && equipment.arabicName ? equipment.arabicName : (language === 'ar' ? `${t(equipment.equipmentType)} ${equipment.equipmentNumber}` : `${t(equipment.equipmentType)} ${equipment.equipmentNumber}`)} ({equipment.serialNumber})
+                                                {language === 'ar' ? (equipment.arabicName ? `${equipment.arabicName} ${equipment.equipmentNumber}` : `${t(equipment.equipmentType)} ${equipment.equipmentNumber}`) : `${t(equipment.equipmentType)} ${equipment.equipmentNumber}`} ({equipment.serialNumber})
                                             </p>
                                             <p className="text-sm text-gray-500">{equipment.serialNumber}</p>
                                         </div>
@@ -427,7 +427,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                         <div>
                           <h3 className="font-bold text-xl text-green-600 mb-1">{t('step1_selectedEquipment')}</h3>
                           <p className="text-2xl font-black text-green-900 uppercase">
-                            {language === 'ar' && selectedEquipment.arabicName ? selectedEquipment.arabicName : (language === 'ar' ? `${t(selectedEquipment.equipmentType)} ${selectedEquipment.equipmentNumber}` : `${t(selectedEquipment.equipmentType)} ${selectedEquipment.equipmentNumber}`)} ({selectedEquipment.serialNumber})
+                            {language === 'ar' ? (selectedEquipment.arabicName ? `${selectedEquipment.arabicName} ${selectedEquipment.equipmentNumber}` : `${t(selectedEquipment.equipmentType)} ${selectedEquipment.equipmentNumber}`) : `${t(selectedEquipment.equipmentType)} ${selectedEquipment.equipmentNumber}`} ({selectedEquipment.serialNumber})
                           </p>
                         </div>
                         <button type="button" onClick={resetForm} className="bg-white text-green-600 px-4 py-2 rounded-lg border border-green-200 shadow-sm hover:bg-green-100 transition font-bold text-sm">{t('changeEquipment')}</button>
