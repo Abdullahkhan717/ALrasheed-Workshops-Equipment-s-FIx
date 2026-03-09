@@ -373,7 +373,7 @@ const AppContent: React.FC = () => {
                                         className="p-3 border-b hover:bg-green-50 cursor-pointer"
                                       >
                                         <p className="font-semibold">
-                                          {language === 'ar' && eq.arabicName ? eq.arabicName : `${eq.equipmentNumber} (${t(eq.equipmentType)})`}
+                                          {language === 'ar' && eq.arabicName ? eq.arabicName : (language === 'ar' ? `${t(eq.equipmentType)} ${eq.equipmentNumber}` : `${eq.equipmentNumber} (${t(eq.equipmentType)})`)}
                                         </p>
                                         <p className="text-sm text-gray-500">{eq.serialNumber}</p>
                                       </div>

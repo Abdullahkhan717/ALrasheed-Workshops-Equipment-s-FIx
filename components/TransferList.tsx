@@ -36,13 +36,26 @@ export const TransferList: React.FC = () => {
         }
       }
 
+      // Update Transfer Request
       await updateData('TransferRequests', {
         ...request,
         status,
-        approvalDate: new Date().toISOString(),
-        approvedBy: currentUser?.id || 'Unknown',
+        dateAccepted: new Date().toISOString(),
+        acceptedBy: currentUser?.id || 'Unknown',
+        approver: currentUser?.id || 'Unknown',
         rejectionReason: reason
       });
+
+      // If accepted, update equipment location
+      if (status === 'Accepted') {
+        const equipment = equipments.find(e => e.id === request.equipmentId);
+        if (equipment) {
+          await updateData('Equipments', {
+            ...equipment,
+            branchLocation: request.toLocation
+          });
+        }
+      }
       alert(status === 'Accepted' ? t('alert_requestAccepted') || 'Request accepted' : t('alert_requestRejected'));
     } catch (error) {
       console.error('Error updating transfer request:', error);
@@ -141,6 +154,7 @@ export const TransferList: React.FC = () => {
                 <th className="px-6 py-3 text-left rtl:text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('equipment')}</th>
                 <th className="px-6 py-3 text-left rtl:text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('transferDetails')}</th>
                 <th className="px-6 py-3 text-left rtl:text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('requester')}</th>
+                <th className="px-6 py-3 text-left rtl:text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('approver')}</th>
                 <th className="px-6 py-3 text-left rtl:text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('status')}</th>
                 <th className="px-6 py-3 text-right rtl:text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
               </tr>
@@ -190,7 +204,13 @@ export const TransferList: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{req.requesterName}</div>
                         <div className="text-xs text-gray-500">
-                          {new Date(req.requestDate).toLocaleDateString()}
+                          {new Date(req.dateRequested).toLocaleDateString()}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{req.approver || req.acceptedBy || '-'}</div>
+                        <div className="text-xs text-gray-500">
+                          {req.dateAccepted ? new Date(req.dateAccepted).toLocaleDateString() : '-'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

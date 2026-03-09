@@ -5,6 +5,8 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useData } from '../context/DataContext';
 import { NewLocationForm } from './NewLocationForm';
 
+import { useAuth } from '../context/AuthContext';
+
 interface NewEquipmentFormProps {
   onClose: () => void;
   onAddEquipment: (equipment: Omit<Equipment, 'id'>) => void;
@@ -18,6 +20,7 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
   const isEditMode = equipmentToEdit !== null;
   const { t } = useTranslation();
   const { locations, createData } = useData();
+  const { currentUser } = useAuth();
 
   const [equipmentType, setEquipmentType] = useState(PRESET_TYPES[0]);
   const [customEquipmentType, setCustomEquipmentType] = useState('');
@@ -49,8 +52,10 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
             setEquipmentType('AddNew');
             setCustomEquipmentType(equipmentToEdit.equipmentType);
         }
+    } else if (currentUser && currentUser.role !== 'admin') {
+        setBranchLocation(currentUser.location || '');
     }
-  }, [equipmentToEdit, isEditMode]);
+  }, [equipmentToEdit, isEditMode, currentUser]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -208,7 +213,8 @@ export const NewEquipmentForm: React.FC<NewEquipmentFormProps> = ({ onClose, onA
                     setBranchLocation(e.target.value);
                 }
               }}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              disabled={!isEditMode && currentUser?.role !== 'admin'}
+              className={`mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm ${!isEditMode && currentUser?.role !== 'admin' ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
             >
               <option value="">{t('location')}</option>
               {locations.map(loc => (

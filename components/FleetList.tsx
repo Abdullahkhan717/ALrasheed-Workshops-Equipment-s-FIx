@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Equipment } from '../types';
 import { NewEquipmentForm } from './NewVehicleForm';
-import { PlusIcon, PencilIcon, TrashIcon, WhatsappIcon, ArrowsRightLeftIcon, EyeIcon, TruckIcon, WrenchScrewdriverIcon } from './Icons';
+import { PlusIcon, PencilIcon, TrashIcon, WhatsappIcon, ArrowsRightLeftIcon, EyeIcon, TruckIcon, WrenchScrewdriverIcon, CheckIcon } from './Icons';
 import { useTranslation } from '../hooks/useTranslation';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
@@ -192,7 +192,7 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                       className="p-3 border-b hover:bg-green-50 cursor-pointer"
                     >
                       <p className="font-semibold">
-                        {useTranslation().language === 'ar' && eq.arabicName ? eq.arabicName : eq.equipmentNumber} ({t(eq.equipmentType)})
+                        {useTranslation().language === 'ar' && eq.arabicName ? eq.arabicName : (useTranslation().language === 'ar' ? `${t(eq.equipmentType)} ${eq.equipmentNumber}` : eq.equipmentNumber)} {useTranslation().language !== 'ar' && `(${t(eq.equipmentType)})`}
                       </p>
                       <p className="text-sm text-gray-500">{eq.serialNumber}</p>
                     </div>
@@ -237,8 +237,6 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                 <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('equipmentNumber')}</th>
                 <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('make')}</th>
                 <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('model')}</th>
-                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('serialNumber')}</th>
-                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('power')}</th>
                 <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('location')}</th>
                 <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
                 </tr>
@@ -249,15 +247,19 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
                     <tr key={`${equipment.id}-${index}`} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{t(equipment.equipmentType)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {useTranslation().language === 'ar' && equipment.arabicName ? equipment.arabicName : equipment.equipmentNumber}
+                      {useTranslation().language === 'ar' && equipment.arabicName ? equipment.arabicName : (useTranslation().language === 'ar' ? `${t(equipment.equipmentType)} ${equipment.equipmentNumber}` : equipment.equipmentNumber)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{equipment.make}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{equipment.modelNumber}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{equipment.serialNumber}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{equipment.power || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{equipment.branchLocation}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center space-x-2">
+                            <button onClick={() => setSelectedEquipmentId(equipment.id)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('details')}>
+                                <EyeIcon className="h-5 w-5"/>
+                            </button>
+                            <button onClick={() => onNewRepairRequest?.(equipment.id)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('select')}>
+                                <CheckIcon className="h-5 w-5"/>
+                            </button>
                             {isHomeBranch(equipment.branchLocation) && (
                                 <button onClick={() => handleEditClick(equipment)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('editEquipment')}>
                                     <PencilIcon className="h-5 w-5"/>

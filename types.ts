@@ -78,6 +78,7 @@ export interface TransferRequest {
   dateRequested: string;
   dateAccepted?: string;
   acceptedBy?: string;
+  approver?: string;
   rejectionReason?: string;
   requesterId?: string;
 }
