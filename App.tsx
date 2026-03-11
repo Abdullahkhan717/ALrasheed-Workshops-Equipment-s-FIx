@@ -69,6 +69,27 @@ const AppContent: React.FC = () => {
     deleteData,
   } = useData();
 
+// 2. Phir jahan "useData()" ka data load ho raha hai uske foran baad:
+const {
+    equipments,
+    workshops,
+    repairRequests, // Is data ka wait karna hai
+    // ... baqi variables
+} = useData();
+
+// 3. YAHAN IS CODE KO RAKHEIN:
+useEffect(() => {
+  if (repairRequests && repairRequests.length > 0) {
+    // Sab se bada Job Card Number nikalne ke liye
+    const allNumbers = repairRequests.map(req => Number(req.jobCardNumber || 0));
+    const maxNumber = Math.max(...allNumbers);
+    
+    if (maxNumber > 0) {
+      setLastJobCardNumber(maxNumber);
+    }
+  }
+}, [repairRequests]); // Yeh tab chalega jab Google Sheet se data aaye ga
+
 
 
   useEffect(() => {
