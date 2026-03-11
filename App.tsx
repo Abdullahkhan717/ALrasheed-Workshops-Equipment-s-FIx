@@ -34,7 +34,26 @@ const AppContent: React.FC = () => {
   const [activeView, setActiveView] = useState<View>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const [lastJobCardNumber, setLastJobCardNumber] = useState<number>(262000);
+ const [lastJobCardNumber, setLastJobCardNumber] = useState<number>(262000);
+
+// ⬇️ YAHAN USEEFFECT LAGANA HAI
+useEffect(() => {
+  const fetchLastJobCard = async () => {
+    try {
+      const rows = await getSheetRows(); // ← yeh aap ka sheet fetch function hoga
+      if (rows.length > 0) {
+        const lastRow = rows[rows.length - 1];
+        const lastNumber = Number(lastRow.jobCardNumber);
+        setLastJobCardNumber(lastNumber);
+      }
+    } catch (error) {
+      console.error("Error fetching last job card:", error);
+    }
+  };
+
+  fetchLastJobCard();
+}, []);
+
 
   const [searchEquipmentQuery, setSearchEquipmentQuery] = useState('');
   const [initialLocationFilter, setInitialLocationFilter] = useState('');
