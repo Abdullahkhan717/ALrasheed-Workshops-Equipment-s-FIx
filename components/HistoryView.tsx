@@ -7,6 +7,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { CompletionFormModal } from './CompletionFormModal';
 import * as XLSX from 'xlsx';
 import { translateText } from '../services/translationService';
+import { formatDate, formatTime } from '../utils/formatters';
 
 interface HistoryViewProps {
   equipments: Equipment[];
@@ -239,7 +240,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                     {!selectedEquipmentId && <span className="text-green-600 font-semibold block mb-1">{getEquipmentInfo(req.equipmentId)}</span>}
                     {t('requestId')}: {req.id}
                   </p>
-                  <p className="text-sm text-gray-500">{t('dateIn')}: {req.dateIn} at {req.timeIn}</p>
+                  <p className="text-sm text-gray-500">{t('dateIn')}: {formatDate(req.dateIn)} at {formatTime(req.timeIn)}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                     <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
@@ -305,7 +306,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                     </button>
                 ) : (
                     <div>
-                       <p className="text-sm text-gray-500">{t('completedOn')}: {req.dateOut} at {req.timeOut}</p>
+                       <p className="text-sm text-gray-500">{t('completedOn')}: {formatDate(req.dateOut)} at {formatTime(req.timeOut)}</p>
                     </div>
                 )}
               </div>

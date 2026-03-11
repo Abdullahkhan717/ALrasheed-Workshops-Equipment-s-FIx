@@ -44,6 +44,10 @@ export const EquipmentList: React.FC<EquipmentListProps> = ({
     }
   }, [initialSearchQuery]);
 
+  useEffect(() => {
+    setLocationFilter(initialLocationFilter);
+  }, [initialLocationFilter]);
+
   const isHomeBranch = (branchLocation: string) => {
     if (!currentUser) return false;
     if (currentUser.role === 'admin') return true;

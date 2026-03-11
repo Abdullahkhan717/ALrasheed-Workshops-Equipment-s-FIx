@@ -8,6 +8,8 @@ import { useData } from '../context/DataContext';
 declare const jspdf: any;
 declare const html2canvas: any;
 
+import { formatDate, formatTime } from '../utils/formatters';
+
 interface JobCardProps {
   request: RepairRequest;
   equipment: Equipment;
@@ -108,147 +110,184 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         </div>
         
         <div id="print-section" className="p-8 bg-white" ref={printRef} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-          <div className="border-b-2 border-black pb-4 mb-4">
-            <h1 className="text-4xl font-bold text-center">WORKSHOP JOB CARD</h1>
-            <h2 className="text-xl font-semibold text-center mt-1 uppercase">AL rasheed Co workshop</h2>
-            <p className="text-center text-gray-600 font-bold mt-2">Repair Request</p>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-6 text-start">
-            <div className="text-sm">
-                <p><strong className="w-28 inline-block">{t('jobCardNo')}:</strong> {request.id}</p>
-                <p><strong className="w-28 inline-block">{t('dateIn')}:</strong> {request.dateIn}</p>
-                <p><strong className="w-28 inline-block">{t('timeIn')}:</strong> {request.timeIn}</p>
-                <p><strong className="w-28 inline-block">Request From:</strong> {request.fromLocation || '-'}</p>
-                <p><strong className="w-28 inline-block">To:</strong> {request.toLocation || '-'}</p>
-            </div>
-            <div className="text-sm">
-                <p><strong className="w-28 inline-block">{t('status')}:</strong> {t(request.status.toLowerCase() as 'pending' | 'completed')}</p>
-                <p><strong className="w-28 inline-block">{t('purpose')}:</strong> {t(`purpose_${request.purpose.toLowerCase().replace(/ /g, '_')}`)}</p>
-                <p><strong className="w-28 inline-block">{t('complainerOperatorName')}:</strong> {request.driverName}</p>
-                <p><strong className="w-28 inline-block">{t('mileage')}:</strong> {request.mileage || 'N/A'}</p>
-            </div>
-          </div>
-
-          {(request.status === 'Rejected' || request.status === 'Cancelled') && request.rejectionReason && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-start">
-                <p className="text-red-700 font-bold mb-1">
-                    {request.status === 'Rejected' ? t('rejectionReason') : t('cancellationReason')}:
-                </p>
-                <p className="text-red-600">{request.rejectionReason}</p>
-                {request.acceptedBy && (
-                    <p className="text-xs text-red-500 mt-2">
-                        {t('actionBy')}: {request.acceptedBy} {request.approvalDate ? `on ${new Date(request.approvalDate).toLocaleString()}` : ''}
-                    </p>
-                )}
-            </div>
-          )}
-
-          {request.status === 'Accepted' && request.acceptedBy && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 text-start">
-                <p className="text-green-700 font-bold">
-                    {t('acceptedBy')}: <span className="font-normal text-green-600">{request.acceptedBy}</span>
-                </p>
-                {request.approvalDate && (
-                    <p className="text-xs text-green-500 mt-1">
-                        {t('approvalDate')}: {new Date(request.approvalDate).toLocaleString()}
-                    </p>
-                )}
-            </div>
-          )}
-          
-          <div className="border rounded-lg p-4 mb-6 text-start">
-              <h3 className="font-bold text-lg mb-2 border-b pb-1">{t('equipmentDetails')}</h3>
-              <div className="grid grid-cols-2 gap-x-4">
-                <p><strong className="w-32 inline-block">{t('type')}:</strong> {language === 'ar' && equipment.arabicName ? equipment.arabicName : t(equipment.equipmentType)}</p>
-                <p><strong className="w-32 inline-block">{t('equipmentNumber')}:</strong> {language === 'ar' && equipment.arabicName ? equipment.arabicName : equipment.equipmentNumber}</p>
-                <p><strong className="w-32 inline-block">{t('make')}:</strong> {equipment.make}</p>
-                <p><strong className="w-32 inline-block">{t('model')}:</strong> {equipment.modelNumber}</p>
-                <p><strong className="w-32 inline-block">{t('serialNumber')}:</strong> {equipment.serialNumber}</p>
-                <p><strong className="w-32 inline-block">{t('power')}:</strong> {equipment.power || '-'}</p>
-                <p><strong className="w-32 inline-block">{t('location')}:</strong> {equipment.branchLocation}</p>
+          <div className="border-4 border-double border-black p-6 mb-6">
+            <div className="flex justify-between items-center border-b-2 border-black pb-4 mb-6">
+              <div className="text-start">
+                <h1 className="text-3xl font-black uppercase tracking-tighter">AL RASHEED CO.</h1>
+                <p className="text-sm font-bold uppercase">Workshop Management System</p>
+                <p className="text-xs">Equipment Maintenance & Repair</p>
               </div>
-          </div>
-          
-          <div className='text-start mb-6'>
-            <h3 className="font-bold text-lg mb-2 border-b pb-1">{t('jobCard_faultsReported')}</h3>
-            <table className="min-w-full border border-gray-300 table-fixed">
-                <thead className="bg-gray-100">
-                    <tr>
-                        <th className="p-2 border text-start w-16">{t('sr')}</th>
-                        <th className="p-2 border text-start w-48">{t('workshop')}</th>
-                        <th className="p-2 border text-start w-48">{t('mechanic')}</th>
-                        <th className="p-2 border text-start">{t('faultDescription')}</th>
-                    </tr>
+              <div className="text-end">
+                <h2 className="text-4xl font-black text-gray-300">JOB CARD</h2>
+                <p className="text-sm font-bold">No: <span className="text-red-600">{request.id}</span></p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-8 mb-8">
+              <div className="space-y-2 text-start">
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('dateIn')}</span>
+                  <span className="font-semibold text-sm">{formatDate(request.dateIn)}</span>
+                </div>
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('timeIn')}</span>
+                  <span className="font-semibold text-sm">{formatTime(request.timeIn)}</span>
+                </div>
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">From</span>
+                  <span className="font-semibold text-sm">{request.fromLocation || '-'}</span>
+                </div>
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">To Workshop</span>
+                  <span className="font-semibold text-sm">{request.toLocation || '-'}</span>
+                </div>
+              </div>
+              
+              <div className="space-y-2 text-start">
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('jobStatus')}</span>
+                  <span className={`font-bold text-sm uppercase ${request.status === 'Completed' ? 'text-green-600' : 'text-orange-600'}`}>
+                    {t(request.status.toLowerCase() as any)}
+                  </span>
+                </div>
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('purpose')}</span>
+                  <span className="font-semibold text-sm">{t(`purpose_${request.purpose.toLowerCase().replace(/ /g, '_')}`)}</span>
+                </div>
+                {request.status === 'Completed' && (
+                  <>
+                    <div className="flex border-b border-gray-200 py-1">
+                      <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('dateOut')}</span>
+                      <span className="font-semibold text-sm">{formatDate(request.dateOut || '')}</span>
+                    </div>
+                    <div className="flex border-b border-gray-200 py-1">
+                      <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('timeOut')}</span>
+                      <span className="font-semibold text-sm">{formatTime(request.timeOut || '')}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded border border-gray-200 mb-8">
+              <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 border-b border-gray-300 pb-1">{t('equipmentDetails')}</h3>
+              <div className="grid grid-cols-3 gap-4 text-start">
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('type')}</p>
+                  <p className="font-bold text-sm">{language === 'ar' && equipment.arabicName ? equipment.arabicName : t(equipment.equipmentType)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('equipmentNumber')}</p>
+                  <p className="font-bold text-sm">{equipment.equipmentNumber}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('serialNumber')}</p>
+                  <p className="font-bold text-sm">{equipment.serialNumber}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('make')} / {t('model')}</p>
+                  <p className="font-bold text-sm">{equipment.make} / {equipment.modelNumber}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('mileage')}</p>
+                  <p className="font-bold text-sm">{request.mileage || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('complainerOperatorName')}</p>
+                  <p className="font-bold text-sm">{request.driverName}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 border-b border-gray-300 pb-1">{t('jobCard_faultsReported')}</h3>
+              <table className="w-full border-collapse border border-black">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-12">Sr.</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">Workshop</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">Mechanic</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase">Fault Description</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    {request.faults.map((fault, index) => {
-                        const workshop = workshops.find(w => String(w.id) === String(fault.workshopId));
-                        return (
-                            <tr key={fault.id}>
-                                <td className="p-2 border text-center">{index + 1}</td>
-                                <td className="p-2 border break-words">{workshop?.subName || 'N/A'}</td>
-                                <td className="p-2 border break-words">{fault.mechanicName || ''}</td>
-                                <td className="p-2 border break-words">{fault.description}</td>
-                            </tr>
-                        )
-                    })}
-                     {request.status === 'Pending' && Array.from({ length: Math.max(0, 10 - request.faults.length) }).map((_, index) => (
-                        <tr key={`empty-${index}`}>
-                            <td className="p-2 border text-center h-8">{request.faults.length + index + 1}</td>
-                            <td className="p-2 border"></td>
-                            <td className="p-2 border"></td>
-                            <td className="p-2 border"></td>
-                        </tr>
-                    ))}
+                  {request.faults.map((fault, index) => {
+                    const workshop = workshops.find(w => String(w.id) === String(fault.workshopId));
+                    return (
+                      <tr key={fault.id}>
+                        <td className="border border-black p-2 text-center text-sm">{index + 1}</td>
+                        <td className="border border-black p-2 text-sm">{workshop?.subName || '-'}</td>
+                        <td className="border border-black p-2 text-sm">{fault.mechanicName || '-'}</td>
+                        <td className="border border-black p-2 text-sm">{fault.description}</td>
+                      </tr>
+                    );
+                  })}
+                  {request.status === 'Pending' && Array.from({ length: Math.max(0, 8 - request.faults.length) }).map((_, index) => (
+                    <tr key={`empty-${index}`}>
+                      <td className="border border-black p-2 h-8"></td>
+                      <td className="border border-black p-2"></td>
+                      <td className="border border-black p-2"></td>
+                      <td className="border border-black p-2"></td>
+                    </tr>
+                  ))}
                 </tbody>
-            </table>
-          </div>
+              </table>
+            </div>
 
-          {request.status === 'Completed' && (
-            <div className='text-start'>
-                <h3 className="font-bold text-lg mb-2 border-b pb-1">{t('workDone_and_parts_used')}</h3>
-                {request.faults.map((fault, index) => (
-                    <div key={fault.id} className="mb-4 border-b pb-2">
-                        <p className="font-semibold">{index + 1}. {t('fault_colon')} <span className="font-normal">{fault.description}</span></p>
-                        <p className="mt-1 font-semibold">{t('workDone_colon')} <span className="font-normal whitespace-pre-wrap">{fault.workDone || 'N/A'}</span></p>
-                        {fault.partsUsed && fault.partsUsed.length > 0 && (
-                            <div className="mt-2">
-                                <p className="font-semibold">{t('partsUsed')}:</p>
-                                <table className="min-w-full border border-gray-200 mt-1 text-sm">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="p-1 border text-start">{t('partName')}</th>
-                                            <th className="p-1 border text-start w-24">{t('quantity')}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {fault.partsUsed.map(part => (
-                                            <tr key={part.id}>
-                                                <td className="p-1 border">{part.name}</td>
-                                                <td className="p-1 border">{part.quantity}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
+            {request.status === 'Completed' && (
+              <div className="mb-8">
+                <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 border-b border-gray-300 pb-1">{t('workDone_and_parts_used')}</h3>
+                <div className="space-y-4">
+                  {request.faults.map((fault, index) => (
+                    <div key={fault.id} className="border border-gray-200 p-3 rounded">
+                      <div className="flex justify-between mb-2">
+                        <p className="text-xs font-bold uppercase text-gray-500">Fault #{index + 1}</p>
+                        <p className="text-sm font-semibold">{fault.description}</p>
+                      </div>
+                      <div className="mb-3">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Work Performed</p>
+                        <p className="text-sm whitespace-pre-wrap bg-gray-50 p-2 rounded border border-gray-100">{fault.workDone || 'N/A'}</p>
+                      </div>
+                      {fault.partsUsed && fault.partsUsed.length > 0 && (
+                        <div>
+                          <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Parts Replaced</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {fault.partsUsed.map(part => (
+                              <div key={part.id} className="flex justify-between text-xs border-b border-gray-100 pb-1">
+                                <span>{part.name}</span>
+                                <span className="font-bold">Qty: {part.quantity}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                ))}
-            </div>
-          )}
+                  ))}
+                </div>
+              </div>
+            )}
 
-
-          <div className="mt-16 grid grid-cols-3 gap-8 text-center text-sm">
-            <div>
-                <p className="border-t border-gray-400 pt-2">{t('driverSignature')}</p>
+            <div className="mt-12 grid grid-cols-3 gap-12">
+              <div className="text-center">
+                <div className="border-t border-black pt-2">
+                  <p className="text-[10px] font-bold uppercase">Operator Signature</p>
+                </div>
+              </div>
+              <div className="text-center">
+                <p className="font-bold text-sm mb-1">{primaryForeman}</p>
+                <div className="border-t border-black pt-2">
+                  <p className="text-[10px] font-bold uppercase">Foreman Signature</p>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="border-t border-black pt-2">
+                  <p className="text-[10px] font-bold uppercase">Manager Signature</p>
+                </div>
+              </div>
             </div>
-             <div>
-                <p className="font-semibold">{primaryForeman}</p>
-                <p className="border-t border-gray-400 pt-2 mt-2">{t('foremanSignature')}</p>
-            </div>
-             <div>
-                <p className="border-t border-gray-400 pt-2">{t('workshopManagerSignature')}</p>
+            
+            <div className="mt-8 text-center text-[8px] text-gray-400 uppercase tracking-[0.2em]">
+              Computer Generated Document - No Signature Required for Validation
             </div>
           </div>
         </div>

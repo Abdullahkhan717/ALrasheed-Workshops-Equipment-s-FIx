@@ -3,6 +3,7 @@ import { useData } from '../context/DataContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { OilLogView } from './OilLogView';
 import { PlusIcon } from './Icons';
+import { formatDate, formatTime } from '../utils/formatters';
 
 interface OilLogHistoryViewProps {
   selectedEquipmentId?: string;
@@ -63,7 +64,7 @@ export const OilLogHistoryView: React.FC<OilLogHistoryViewProps> = ({ selectedEq
                             : `${t(equipment.equipmentType)} ${equipment.equipmentNumber} (${equipment.serialNumber})`
                         ) : 'Unknown Equipment'}
                       </p>
-                      <p className="text-sm text-gray-500">{log.date} at {log.time}</p>
+                      <p className="text-sm text-gray-500">{formatDate(log.date)} at {formatTime(log.time)}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">

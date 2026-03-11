@@ -174,6 +174,17 @@ const AppContent: React.FC = () => {
             initialLocationFilter={initialLocationFilter}
             onNewRepairRequest={(id) => setActiveView('request')}
         />;
+      case 'myEquipments':
+        return <EquipmentList 
+            equipments={equipments} 
+            addEquipment={handleCreateEquipment} 
+            deleteEquipment={requestDeleteEquipment} 
+            updateEquipment={(equipment) => updateData('Equipments', equipment)} 
+            onTransfer={(eq) => setTransferEquipment(eq)}
+            initialSearchQuery={searchEquipmentQuery}
+            initialLocationFilter={currentUser?.location || ''}
+            onNewRepairRequest={(id) => setActiveView('request')}
+        />;
       case 'request':
         return <RepairRequestView 
             equipments={equipments} 

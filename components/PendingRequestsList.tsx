@@ -6,6 +6,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { CompletionFormModal } from './CompletionFormModal';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
+import { formatDate } from '../utils/formatters';
 
 interface PendingRequestsListProps {
   repairRequests: RepairRequest[];
@@ -133,7 +134,7 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('driver')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dateIn')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('applicationStatus')}</th>
-              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('workStatus')}</th>
+              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('jobStatus')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
             </tr>
           </thead>
@@ -144,7 +145,7 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{request.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getEquipmentInfo(request.equipmentId)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.driverName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.dateIn}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(request.dateIn)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         request.applicationStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 

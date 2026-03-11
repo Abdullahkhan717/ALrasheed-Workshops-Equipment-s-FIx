@@ -215,6 +215,8 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
 
         const now = new Date();
         const appType = fromLocation === toLocation ? 'Internal Repair Order (IRO)' : 'Outsourced / External Service';
+        const isIRO = appType === 'Internal Repair Order (IRO)';
+        
         const newRequest: RepairRequest = {
           id: String(newJobCardNumber),
           equipmentId: selectedEquipmentId,
@@ -222,15 +224,17 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           mileage,
           purpose: finalPurpose,
           faults: finalFaults,
-          dateIn: now.toLocaleDateString(),
-          timeIn: now.toLocaleTimeString(),
+          dateIn: now.toISOString(), // Use ISO for consistent parsing
+          timeIn: now.toISOString(),
           status: 'Pending',
-          applicationStatus: 'Pending',
+          applicationStatus: isIRO ? 'Accepted' : 'Pending',
           workshopId: finalFaults[0]?.workshopId || '',
           createdBy: currentUser?.id || '',
           fromLocation: fromLocation || currentUser?.location || '',
           toLocation: toLocation || '',
           applicationType: appType,
+          acceptedBy: isIRO ? 'System' : '',
+          approvalDate: isIRO ? now.toISOString() : '',
         };
         
         const payload = {
@@ -240,10 +244,10 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           mileage: mileage || '',
           purpose: finalPurpose,
           faults: JSON.stringify(finalFaults),
-          dateIn: now.toLocaleDateString(),
-          timeIn: now.toLocaleTimeString(),
+          dateIn: now.toISOString(),
+          timeIn: now.toISOString(),
           status: 'Pending',
-          applicationStatus: 'Pending',
+          applicationStatus: isIRO ? 'Accepted' : 'Pending',
           workshopId: finalFaults[0]?.workshopId || '',
           createdBy: currentUser?.id || '',
           fromLocation: fromLocation || currentUser?.location || '',
@@ -253,7 +257,9 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           dateOut: '',
           timeOut: '',
           workDone: '',
-          partsUsed: ''
+          partsUsed: '',
+          acceptedBy: isIRO ? 'System' : '',
+          approvalDate: isIRO ? now.toISOString() : '',
         };
         createData('RepairRequests', payload)
           .then(() => {

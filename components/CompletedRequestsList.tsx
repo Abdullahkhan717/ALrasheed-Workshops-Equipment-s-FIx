@@ -3,6 +3,7 @@ import type { Equipment, Workshop, RepairRequest } from '../types';
 import { JobCard } from './JobCard';
 import { PrinterIcon, WhatsappIcon } from './Icons';
 import { useTranslation } from '../hooks/useTranslation';
+import { formatDate } from '../utils/formatters';
 
 interface CompletedRequestsListProps {
   repairRequests: RepairRequest[];
@@ -53,9 +54,6 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
             <tr>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('jobCardNo')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('equipment')}</th>
-              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('driver')}</th>
-              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dateIn')}</th>
-              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dateOut')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('resolvedFaults')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
             </tr>
@@ -66,9 +64,6 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
                 <tr key={request.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{request.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getEquipmentInfo(request.equipmentId)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.driverName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.dateIn}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.dateOut}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <ul className="list-disc list-inside">
                       {request.faults.map(f => <li key={f.id}>{f.description}</li>)}
@@ -86,7 +81,7 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
               ))
             ) : (
                 <tr>
-                    <td colSpan={7} className="text-center py-10 text-gray-500">{t('noCompletedRequests')}</td>
+                    <td colSpan={4} className="text-center py-10 text-gray-500">{t('noCompletedRequests')}</td>
                 </tr>
             )}
           </tbody>

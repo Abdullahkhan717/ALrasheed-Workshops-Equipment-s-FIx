@@ -4,7 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../context/AuthContext';
 
-type View = 'dashboard' | 'fleet' | 'request' | 'history' | 'workshops' | 'completed' | 'pending' | 'admin' | 'oilLog' | 'locations';
+type View = 'dashboard' | 'fleet' | 'request' | 'history' | 'workshops' | 'completed' | 'pending' | 'admin' | 'oilLog' | 'locations' | 'myEquipments';
 
 interface SidebarProps {
   activeView: View;
@@ -81,6 +81,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, onC
             label={t('equipmentList')}
             isActive={activeView === 'fleet'}
             onClick={() => setActiveView('fleet')}
+        />
+        <NavItem
+            icon={<TruckIcon className="h-6 w-6" />}
+            label={t('myEquipments')}
+            isActive={activeView === 'myEquipments'}
+            onClick={() => setActiveView('myEquipments')}
         />
         <NavItem
             icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
