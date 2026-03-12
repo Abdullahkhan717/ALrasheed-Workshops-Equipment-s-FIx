@@ -141,6 +141,17 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                   <span className="w-32 font-bold text-xs uppercase text-gray-500">To Workshop</span>
                   <span className="font-semibold text-sm">{request.toLocation || '-'}</span>
                 </div>
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('applicationStatus')}</span>
+                  <span className={`font-bold text-sm uppercase ${
+                    request.applicationStatus === 'Accepted' ? 'text-green-600' : 
+                    request.applicationStatus === 'Rejected' ? 'text-orange-600' : 
+                    request.applicationStatus === 'Cancelled' ? 'text-red-600' : 
+                    'text-yellow-600'
+                  }`}>
+                    {t(request.applicationStatus?.toLowerCase() as any || 'pending')}
+                  </span>
+                </div>
               </div>
               
               <div className="space-y-2 text-start">

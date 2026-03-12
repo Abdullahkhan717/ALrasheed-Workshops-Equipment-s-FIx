@@ -54,6 +54,7 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
             <tr>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('jobCardNo')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('equipment')}</th>
+              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('applicationStatus')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('resolvedFaults')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
             </tr>
@@ -64,6 +65,16 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
                 <tr key={request.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{request.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getEquipmentInfo(request.equipmentId)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        request.applicationStatus === 'Accepted' ? 'bg-green-100 text-green-800' :
+                        request.applicationStatus === 'Rejected' ? 'bg-orange-100 text-orange-800' :
+                        request.applicationStatus === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                    }`}>
+                      {t(request.applicationStatus?.toLowerCase() as any || 'completed')}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <ul className="list-disc list-inside">
                       {request.faults.map(f => <li key={f.id}>{f.description}</li>)}

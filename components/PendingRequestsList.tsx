@@ -39,58 +39,87 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
   };
 
   const handleAccept = async (request: RepairRequest) => {
-    if (window.confirm(language === 'ar' ? 'هل أنت متأكد من قبول هذا الطلب؟' : 'Are you sure you want to accept this request?')) {
-      const payload = { 
-        ...request, 
-        applicationStatus: 'Accepted', 
-        acceptedBy: currentUser?.id || 'Unknown',
-        approvalDate: new Date().toISOString(),
-        faults: JSON.stringify(request.faults) 
-      };
-      await updateData('RepairRequests', payload);
-      alert(language === 'ar' ? 'تم قبول الطلب بنجاح.' : 'Request accepted successfully.');
+    try {
+      const confirmMsg = language === 'ar' ? 'هل أنت متأكد من قبول هذا الطلب؟' : 'Are you sure you want to accept this request?';
+      if (window.confirm(confirmMsg)) {
+        const updatedRequest: RepairRequest = { 
+          ...request, 
+          applicationStatus: 'Accepted', 
+          acceptedBy: currentUser?.id || 'Unknown',
+          approvalDate: new Date().toISOString()
+        };
+        await onUpdateRequest(updatedRequest);
+        alert(language === 'ar' ? 'تم قبول الطلب بنجاح.' : 'Request accepted successfully.');
+      }
+    } catch (error: any) {
+      console.error('Accept error:', error);
+      alert('Error accepting request: ' + (error.message || 'Unknown error'));
     }
   };
 
   const handleReject = async (request: RepairRequest) => {
-    const reason = window.prompt(t('enterRejectionReason') || 'Enter rejection reason:');
-    if (reason) {
-      const payload = { 
-        ...request, 
-        applicationStatus: 'Rejected', 
-        rejectionReason: reason, 
-        acceptedBy: currentUser?.id || 'Unknown',
-        approvalDate: new Date().toISOString(),
-        faults: JSON.stringify(request.faults) 
-      };
-      await updateData('RepairRequests', payload);
-      alert(t('alert_requestRejected'));
-    } else if (reason === '') {
-      alert(t('alert_reasonRequired'));
+    try {
+      const promptMsg = t('enterRejectionReason') || 'Enter rejection reason:';
+      const reason = window.prompt(promptMsg);
+      
+      if (reason === null) return; // User cancelled
+      
+      if (reason.trim()) {
+        const updatedRequest: RepairRequest = { 
+          ...request, 
+          applicationStatus: 'Rejected', 
+          status: 'Completed', // Move out of pending
+          rejectionReason: reason.trim(), 
+          acceptedBy: currentUser?.id || 'Unknown',
+          approvalDate: new Date().toISOString()
+        };
+        await onUpdateRequest(updatedRequest);
+        alert(t('alert_requestRejected'));
+      } else {
+        alert(t('alert_reasonRequired'));
+      }
+    } catch (error: any) {
+      console.error('Reject error:', error);
+      alert('Error rejecting request: ' + (error.message || 'Unknown error'));
     }
   };
 
   const handleCancel = async (request: RepairRequest) => {
-    const reason = window.prompt(t('enterCancellationReason') || 'Please enter the reason for cancellation:');
-    if (reason) {
-      const payload = { 
-        ...request, 
-        applicationStatus: 'Cancelled', 
-        rejectionReason: reason, 
-        acceptedBy: currentUser?.id || 'Unknown',
-        approvalDate: new Date().toISOString(),
-        faults: JSON.stringify(request.faults) 
-      };
-      await updateData('RepairRequests', payload);
-      alert(t('alert_requestCancelled') || 'Request has been cancelled.');
-    } else if (reason === '') {
-      alert(t('cancellationReasonRequired') || 'Cancellation reason is required.');
+    try {
+      const promptMsg = t('enterCancellationReason') || 'Please enter the reason for cancellation:';
+      const reason = window.prompt(promptMsg);
+      
+      if (reason === null) return; // User cancelled
+      
+      if (reason.trim()) {
+        const updatedRequest: RepairRequest = { 
+          ...request, 
+          applicationStatus: 'Cancelled', 
+          status: 'Completed', // Move out of pending
+          rejectionReason: reason.trim(), 
+          acceptedBy: currentUser?.id || 'Unknown',
+          approvalDate: new Date().toISOString()
+        };
+        await onUpdateRequest(updatedRequest);
+        alert(t('alert_requestCancelled') || 'Request has been cancelled.');
+      } else {
+        alert(t('cancellationReasonRequired') || 'Cancellation reason is required.');
+      }
+    } catch (error: any) {
+      console.error('Cancel error:', error);
+      alert('Error cancelling request: ' + (error.message || 'Unknown error'));
     }
   };
 
   const handleDelete = async (request: RepairRequest) => {
-    if (window.confirm(t('actionCannotBeUndone'))) {
-      await deleteData('RepairRequests', request.id);
+    try {
+      if (window.confirm(t('actionCannotBeUndone'))) {
+        await deleteData('RepairRequests', request.id);
+        alert(t('alert_requestDeleted') || 'Request deleted successfully.');
+      }
+    } catch (error: any) {
+      console.error('Delete error:', error);
+      alert('Error deleting request: ' + (error.message || 'Unknown error'));
     }
   };
 
@@ -131,7 +160,6 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
             <tr>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('jobCardNo')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('equipment')}</th>
-              <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('driver')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dateIn')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('applicationStatus')}</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">{t('jobStatus')}</th>
@@ -144,7 +172,6 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                 <tr key={request.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{request.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getEquipmentInfo(request.equipmentId)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.driverName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(request.dateIn)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -170,7 +197,8 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                     </button>
                     
                     {/* Accept/Reject option for the destination location user (Branch B) */}
-                    {(currentUser?.location === request.toLocation || currentUser?.role === 'admin') && request.applicationStatus === 'Pending' && (
+                    {(String(currentUser?.location || '').trim().toLowerCase() === String(request.toLocation || '').trim().toLowerCase() || currentUser?.role === 'admin') && 
+                     (String(request.applicationStatus || 'Pending').toLowerCase() === 'pending') && (
                         <>
                             <button onClick={() => handleAccept(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('accept')}>
                                 <CheckBadgeIcon className="h-5 w-5"/>
@@ -182,21 +210,25 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                     )}
 
                     {/* Cancel option for the creator or requester (Branch A) */}
-                    {(currentUser?.id === request.createdBy || currentUser?.location === request.fromLocation || currentUser?.role === 'admin') && request.applicationStatus === 'Pending' && (
+                    {(String(currentUser?.id || '').toLowerCase() === String(request.createdBy || '').toLowerCase() || String(currentUser?.location || '').trim().toLowerCase() === String(request.fromLocation || '').trim().toLowerCase() || currentUser?.role === 'admin') && 
+                     (String(request.applicationStatus || 'Pending').toLowerCase() === 'pending' || String(request.applicationStatus || '').toLowerCase() === 'accepted') && (
                         <button onClick={() => handleCancel(request)} className="p-2 text-red-600 hover:text-red-900 hover:bg-red-100 rounded-full" title={t('cancel')}>
                             <XMarkIcon className="h-5 w-5"/>
                         </button>
                     )}
 
                     {/* Delete option for admin or creator (only if pending) */}
-                    {(currentUser?.role === 'admin' || currentUser?.id === request.createdBy) && request.applicationStatus === 'Pending' && (
+                    {(currentUser?.role === 'admin' || String(currentUser?.id || '').toLowerCase() === String(request.createdBy || '').toLowerCase()) && 
+                     (String(request.applicationStatus || 'Pending').toLowerCase() === 'pending') && (
                         <button onClick={() => handleDelete(request)} className="p-2 text-red-600 hover:text-red-900 hover:bg-red-100 rounded-full" title={t('delete')}>
                             <TrashIcon className="h-5 w-5"/>
                         </button>
                     )}
 
                     {/* Mark as Completed option for either Branch A or Branch B (only if Accepted) */}
-                    {(currentUser?.location === request.toLocation || currentUser?.location === request.fromLocation || currentUser?.role === 'admin') && request.applicationStatus === 'Accepted' && request.status === 'Pending' && (
+                    {(String(currentUser?.location || '').trim().toLowerCase() === String(request.toLocation || '').trim().toLowerCase() || String(currentUser?.location || '').trim().toLowerCase() === String(request.fromLocation || '').trim().toLowerCase() || currentUser?.role === 'admin') && 
+                     (String(request.applicationStatus || '').toLowerCase() === 'accepted') && 
+                     (String(request.status || '').toLowerCase() === 'pending') && (
                         <button onClick={() => setRequestToComplete(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('markAsCompleted')}>
                             <CheckBadgeIcon className="h-5 w-5"/>
                         </button>
