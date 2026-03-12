@@ -84,10 +84,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             
             // Ensure faults is an array
             const finalFaults = Array.isArray(faults) ? faults : [faults];
-            return { ...req, faults: finalFaults } as RepairRequest;
+            return { ...req, id: String(req.id || '').trim(), faults: finalFaults } as RepairRequest;
           } catch (e) {
             console.error(`Failed to parse faults for request ${req.id}:`, req.faults);
-            return { ...req, faults: [] } as RepairRequest; 
+            return { ...req, id: String(req.id || '').trim(), faults: [] } as RepairRequest; 
           }
         });
       setRepairRequests(parsedRequests);
@@ -151,7 +151,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
       setLocations(parsedLocations);
       
-      setSettings(data[stKey] || null);
+      const rawSettings = data[stKey] || [];
+      const settingsObj: Settings = {};
+      if (Array.isArray(rawSettings)) {
+        rawSettings.forEach((s: any) => {
+          if (s.Key) settingsObj[s.Key] = s.Value;
+          else if (s.key) settingsObj[s.key] = s.Value;
+        });
+      }
+      setSettings(settingsObj);
     } catch (err) {
       console.error('Fetch error:', err);
       setError(err instanceof Error ? err : new Error('Failed to fetch data'));
@@ -165,21 +173,42 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [fetchData]);
 
   const createData = async (sheetName: string, payload: any) => {
-    const result = await createRecord(payload, sheetName);
-    await fetchData(); // Refetch all data to stay in sync
-    return result;
+    try {
+      const result = await createRecord(payload, sheetName);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      await fetchData();
+      return result;
+    } catch (err: any) {
+      console.error(`Error creating data in ${sheetName}:`, err);
+      alert(err.message || `Failed to create record in ${sheetName}. Please try again.`);
+      throw err;
+    }
   };
 
   const updateData = async (sheetName: string, payload: any) => {
-    const result = await updateRecord(payload, sheetName);
-    await fetchData();
-    return result;
+    try {
+      const result = await updateRecord(payload, sheetName);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      await fetchData();
+      return result;
+    } catch (err: any) {
+      console.error(`Error updating data in ${sheetName}:`, err);
+      alert(err.message || `Failed to update record in ${sheetName}. Please try again.`);
+      throw err;
+    }
   };
 
   const deleteData = async (sheetName: string, id: string) => {
-    const result = await deleteRecord(id, sheetName);
-    await fetchData();
-    return result;
+    try {
+      const result = await deleteRecord(id, sheetName);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      await fetchData();
+      return result;
+    } catch (err: any) {
+      console.error(`Error deleting data in ${sheetName}:`, err);
+      alert(err.message || `Failed to delete record in ${sheetName}. Please try again.`);
+      throw err;
+    }
   };
 
   const value = {
