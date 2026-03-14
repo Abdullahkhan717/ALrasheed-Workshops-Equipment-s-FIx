@@ -7,7 +7,7 @@ import { CogIcon, UserCircleIcon, ArrowRightOnRectangleIcon, LanguageIcon } from
 
 export const LoginScreen: React.FC = () => {
   const { users, login, createUser } = useAuth();
-  const { locations, loading, error, refetchData } = useData();
+  const { locations } = useData();
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
 
@@ -87,31 +87,6 @@ export const LoginScreen: React.FC = () => {
           
           <h1 className="text-2xl font-bold text-gray-800">{t('login_title')}</h1>
           <p className="text-lg text-gray-600 font-medium">{t('login_subtitle')}</p>
-          
-          {/* Connection Status */}
-          <div className="mt-4 flex justify-center">
-            {loading ? (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 animate-pulse">
-                Checking Connection...
-              </span>
-            ) : error ? (
-              <div className="flex flex-col items-center">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                  Disconnected from Sheet
-                </span>
-                <button 
-                  onClick={() => refetchData()} 
-                  className="mt-1 text-[10px] text-red-600 underline hover:text-red-800"
-                >
-                  Try Reconnecting
-                </button>
-              </div>
-            ) : (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Connected to Sheet
-              </span>
-            )}
-          </div>
         </div>
         
         {!showCreateUser ? (
