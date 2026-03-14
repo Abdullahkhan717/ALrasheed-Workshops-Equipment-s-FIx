@@ -1,24 +1,22 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import type { Equipment, Workshop, RepairRequest, OilLog, User, Settings, Location, TransferRequest } from '../types';
 import { getAllData, createRecord, updateRecord, deleteRecord } from '../services/googleSheetService';
-import type { Equipment, Workshop, RepairRequest, User } from '../types';
 
 interface DataContextType {
   equipments: Equipment[];
   workshops: Workshop[];
   repairRequests: RepairRequest[];
-  transferRequests: any[];
-  oilLogs: any[];
-  locations: any[];
+  transferRequests: TransferRequest[];
+  oilLogs: OilLog[];
   users: User[];
-  settings: any;
+  locations: Location[];
+  settings: Settings | null;
   loading: boolean;
   error: Error | null;
   refetchData: () => Promise<void>;
-  createData: (sheetName: string, data: any) => Promise<void>;
-  updateData: (sheetName: string, data: any) => Promise<void>;
-  deleteData: (sheetName: string, id: string) => Promise<void>;
-  lastJobCardNumber: number;
-  setLastJobCardNumber: React.Dispatch<React.SetStateAction<number>>;
+  createData: (sheetName: string, payload: any) => Promise<any>;
+  updateData: (sheetName: string, payload: any) => Promise<any>;
+  deleteData: (sheetName: string, id: string) => Promise<any>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -27,103 +25,136 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [repairRequests, setRepairRequests] = useState<RepairRequest[]>([]);
-  const [transferRequests, setTransferRequests] = useState<any[]>([]);
-  const [oilLogs, setOilLogs] = useState<any[]>([]);
-  const [locations, setLocations] = useState<any[]>([]);
+  const [transferRequests, setTransferRequests] = useState<TransferRequest[]>([]);
+  const [oilLogs, setOilLogs] = useState<OilLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [settings, setSettings] = useState<any>(null);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const [lastJobCardNumber, setLastJobCardNumber] = useState<number>(262000);
-
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const rawData = await getAllData();
-      console.log('Raw data keys received:', Object.keys(rawData));
+      const data = await getAllData();
       
-      // Helper to get data regardless of case
-      const getSheetData = (name: string) => {
-        const key = Object.keys(rawData).find(k => k.toLowerCase() === name.toLowerCase());
-        return key ? rawData[key] : [];
+      const findKey = (search: string) => {
+        const keys = Object.keys(data);
+        const exact = keys.find(k => k === search);
+        if (exact) return exact;
+        const caseInsensitive = keys.find(k => k.toLowerCase() === search.toLowerCase());
+        if (caseInsensitive) return caseInsensitive;
+        const singularPlural = keys.find(k => k.toLowerCase().replace(/s$/, '') === search.toLowerCase().replace(/s$/, ''));
+        if (singularPlural) return singularPlural;
+        return null;
       };
 
-      const normalizeData = (data: any[]) => {
-        if (!Array.isArray(data)) return [];
-        return data.map(item => {
-          const normalized: any = {};
-          Object.keys(item).forEach(key => {
-            // Map common variations to expected keys
-            const lowerKey = key.toLowerCase();
-            if (lowerKey === 'id' || lowerKey === 'username' || lowerKey === 'userid') normalized.id = String(item[key]);
-            else if (lowerKey === 'password' || lowerKey === 'pass') normalized.password = String(item[key]);
-            else if (lowerKey === 'role') normalized.role = String(item[key]).toLowerCase();
-            else if (lowerKey === 'status') normalized.status = String(item[key]).toLowerCase();
-            else if (lowerKey === 'location' || lowerKey === 'branch') normalized.location = String(item[key]);
-            else if (lowerKey === 'fullname' || lowerKey === 'name') normalized.fullName = String(item[key]);
-            else normalized[key] = item[key];
-          });
-          return normalized;
-        });
-      };
+      const eqKey = findKey('Equipments') || 'Equipments';
+      const wsKey = findKey('Workshops') || 'Workshops';
+      const rrKey = findKey('RepairRequests') || 'RepairRequests';
+      const olKey = findKey('OilLogs') || 'OilLogs';
+      const trKey = findKey('TransferRequests') || 'TransferRequests';
+      const usKey = findKey('Users') || 'Users';
+      const locKey = findKey('Locations') || 'Locations';
+      const stKey = findKey('Settings') || 'Settings';
 
-      const equipmentsData = getSheetData('Equipments');
-      const workshopsData = getSheetData('Workshops');
-      const repairRequestsData = getSheetData('RepairRequests');
-      const transferRequestsData = getSheetData('TransferRequests');
-      const oilLogsData = getSheetData('OilLogs');
-      const locationsData = getSheetData('Locations');
-      const usersData = normalizeData(getSheetData('Users'));
-      const settingsData = getSheetData('Settings');
+      console.log('Detected Keys:', { eqKey, wsKey, rrKey, olKey, usKey, locKey, stKey });
+      console.log('Available Sheets in Data:', Object.keys(data));
 
-      setEquipments(equipmentsData);
-      setWorkshops(workshopsData);
+      setEquipments(data[eqKey] || []);
+      setWorkshops(data[wsKey] || []);
       
-      // De-duplicate repair requests by ID (preferring the last one in the list)
-      const deDupedRepairRequests = (repairRequestsData || []).reduce((acc: RepairRequest[], curr: RepairRequest) => {
-        const index = acc.findIndex(r => r.id === curr.id);
-        if (index > -1) {
-          acc[index] = curr;
-        } else {
-          acc.push(curr);
-        }
-        return acc;
-      }, []);
-      setRepairRequests(deDupedRepairRequests);
-      
-      setTransferRequests(transferRequestsData);
-      setOilLogs(oilLogsData);
-      setLocations(locationsData);
-      setUsers(usersData);
-      
-      if (settingsData && Array.isArray(settingsData)) {
-        const settingsObj: any = {};
-        settingsData.forEach((s: any) => {
-          if (s.Key) settingsObj[s.Key] = s.Value;
-        });
-        setSettings(settingsObj);
-
-        // Calculate lastJobCardNumber from settings
-        let maxId = 262000;
-        const val = parseInt(settingsObj.lastJobCardNumber);
-        if (!isNaN(val)) maxId = val;
-
-        // Also check repair requests
-        if (deDupedRepairRequests.length > 0) {
-          const ids = deDupedRepairRequests.map(r => parseInt(r.id)).filter(id => !isNaN(id));
-          if (ids.length > 0) {
-            const currentMax = Math.max(...ids);
-            if (currentMax > maxId) maxId = currentMax;
+      const rawRequests = data[rrKey] || [];
+      const parsedRequests = rawRequests.map((req: any) => {
+          try {
+            let faults = [];
+            const rawFaults = req.faults;
+            if (typeof rawFaults === 'string') {
+                const trimmed = rawFaults.trim();
+                if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                    faults = JSON.parse(trimmed);
+                } else if (trimmed) {
+                    // If it's a plain string, treat it as a single fault description
+                    faults = [{ id: crypto.randomUUID(), description: trimmed, workshopId: req.workshopId || '' }];
+                }
+            } else if (Array.isArray(rawFaults)) {
+                faults = rawFaults;
+            }
+            
+            // Ensure faults is an array
+            const finalFaults = Array.isArray(faults) ? faults : [faults];
+            return { ...req, faults: finalFaults } as RepairRequest;
+          } catch (e) {
+            console.error(`Failed to parse faults for request ${req.id}:`, req.faults);
+            return { ...req, faults: [] } as RepairRequest; 
           }
-        }
-        setLastJobCardNumber(maxId);
-      }
+        });
+      setRepairRequests(parsedRequests);
+      setTransferRequests(data[trKey] || []);
       
-      setError(null);
-    } catch (err: any) {
-      console.error('Fetch Data Error:', err);
-      setError(err);
+      const rawOilLogs = data[olKey] || [];
+      const parsedOilLogs = rawOilLogs.map((log: any) => {
+          try {
+              let oilTypes = [];
+              if (typeof log.oilTypes === 'string') {
+                  const trimmed = log.oilTypes.trim();
+                  if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                      oilTypes = JSON.parse(trimmed);
+                  } else if (trimmed) {
+                      oilTypes = [trimmed];
+                  }
+              } else if (Array.isArray(log.oilTypes)) {
+                  oilTypes = log.oilTypes;
+              }
+
+              let filters = [];
+              if (typeof log.filters === 'string') {
+                  const trimmed = log.filters.trim();
+                  if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                      filters = JSON.parse(trimmed);
+                  } else if (trimmed) {
+                      filters = [trimmed];
+                  }
+              } else if (Array.isArray(log.filters)) {
+                  filters = log.filters;
+              }
+
+              return {
+                  ...log,
+                  oilTypes: Array.isArray(oilTypes) ? oilTypes : [oilTypes],
+                  filters: Array.isArray(filters) ? filters : [filters]
+              } as OilLog;
+          } catch (e) {
+              console.error(`Failed to parse oil log ${log.id}:`, e);
+              return { ...log, oilTypes: [], filters: [] } as OilLog;
+          }
+      });
+      setOilLogs(parsedOilLogs);
+      
+      const rawUsers = data[usKey] || [];
+      const parsedUsers = rawUsers.map((u: any) => {
+        // Map common header variations to expected keys
+        const id = String(u.id || u.userId || u['User ID'] || u.name || '').trim();
+        const password = String(u.password || u.Password || u.pass || '').trim();
+        const role = String(u.role || u.Role || 'user').trim();
+        const status = String(u.status || u.Status || 'pending').trim();
+        const location = u.location || u.Location || '';
+        return { id, password, role, status: status.toLowerCase(), location };
+      });
+      setUsers(parsedUsers);
+      
+      const rawLocations = data[locKey] || [];
+      const parsedLocations = rawLocations.map((loc: any) => ({
+          ...loc,
+          hasWorkshop: String(loc.hasWorkshop).toUpperCase() === 'TRUE' || loc.hasWorkshop === true || loc.hasWorkshop === 1 || loc.hasWorkshop === '1'
+      }));
+      setLocations(parsedLocations);
+      
+      setSettings(data[stKey] || null);
+    } catch (err) {
+      console.error('Fetch error:', err);
+      setError(err instanceof Error ? err : new Error('Failed to fetch data'));
     } finally {
       setLoading(false);
     }
@@ -133,43 +164,42 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchData();
   }, [fetchData]);
 
-  const createData = async (sheetName: string, data: any) => {
-    await createRecord(data, sheetName);
-    await fetchData();
+  const createData = async (sheetName: string, payload: any) => {
+    const result = await createRecord(payload, sheetName);
+    await fetchData(); // Refetch all data to stay in sync
+    return result;
   };
 
-  const updateData = async (sheetName: string, data: any) => {
-    await updateRecord(data, sheetName);
+  const updateData = async (sheetName: string, payload: any) => {
+    const result = await updateRecord(payload, sheetName);
     await fetchData();
+    return result;
   };
 
   const deleteData = async (sheetName: string, id: string) => {
-    await deleteRecord(id, sheetName);
+    const result = await deleteRecord(id, sheetName);
     await fetchData();
+    return result;
   };
 
-  return (
-    <DataContext.Provider value={{
-      equipments,
-      workshops,
-      repairRequests,
-      transferRequests,
-      oilLogs,
-      locations,
-      users,
-      settings,
-      loading,
-      error,
-      refetchData: fetchData,
-      createData,
-      updateData,
-      deleteData,
-      lastJobCardNumber,
-      setLastJobCardNumber,
-    }}>
-      {children}
-    </DataContext.Provider>
-  );
+  const value = {
+    equipments,
+    workshops,
+    repairRequests,
+    transferRequests,
+    oilLogs,
+    users,
+    locations,
+    settings,
+    loading,
+    error,
+    refetchData: fetchData,
+    createData,
+    updateData,
+    deleteData,
+  };
+
+  return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
 
 export const useData = () => {
