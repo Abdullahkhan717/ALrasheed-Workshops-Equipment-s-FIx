@@ -136,6 +136,7 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     // Repair Request View
     step1_findEquipment: '1. Find Equipment',
     searchByEquipmentOrSerial: 'Search by Equipment or Serial Number',
+    step3_oilChangeDetails: '3. Oil Change Details',
     details: 'Details',
     select: 'Select',
     repairHistory: 'Repair History',
@@ -308,6 +309,8 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     alert_userUpdated: 'User {{userId}} has been updated.',
     alert_userDeleted: 'User {{userId}} has been deleted.',
     alert_addWorkDone: 'Please describe the work done for each fault.',
+    alert_selectOilOrFilter: 'Please select at least one oil type or filter',
+    alert_oilLogSaveFailed: 'Failed to save oil log to Google Sheet.',
     alert_passwordChanged: 'Password changed successfully.',
     alert_oldPasswordIncorrect: 'The old password you entered is incorrect.',
     alert_passwordsDoNotMatch: 'The new passwords do not match.',
@@ -549,6 +552,7 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     // Repair Request View
     step1_findEquipment: '١. البحث عن المعدات',
     searchByEquipmentOrSerial: 'البحث برقم المعدة أو الرقم التسلسلي',
+    step3_oilChangeDetails: '٣. تفاصيل تغيير الزيت',
     details: 'التفاصيل',
     select: 'اختيار',
     repairHistory: 'سجل الإصلاح',
@@ -721,6 +725,8 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     alert_userUpdated: 'تم تحديث المستخدم {{userId}}.',
     alert_userDeleted: 'تم حذف المستخدم {{userId}}.',
     alert_addWorkDone: 'الرجاء وصف العمل المنجز لكل عطل.',
+    alert_selectOilOrFilter: 'الرجاء اختيار نوع زيت أو فلتر واحد على الأقل',
+    alert_oilLogSaveFailed: 'فشل في حفظ سجل الزيت في Google Sheet.',
     alert_passwordChanged: 'تم تغيير كلمة المرور بنجاح.',
     alert_oldPasswordIncorrect: 'كلمة المرور القديمة التي أدخلتها غير صحيحة.',
     alert_passwordsDoNotMatch: 'كلمات المرور الجديدة غير متطابقة.',
