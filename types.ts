@@ -46,13 +46,13 @@ export interface RepairRequest {
   equipmentId: string;
   driverName: string;
   mileage?: string;
-  purpose: string; // Made flexible to match UI options
+  purpose: 'Repairing' | 'preparing for work' | 'General Checking' | 'Other' | 'Oil Change' | 'Tyre Change';
   faults: Fault[];
   dateIn: string;
   timeIn: string;
   dateOut?: string;
   timeOut?: string;
-  status: 'Pending' | 'Completed' | 'Cancelled';
+  status: 'Pending' | 'Completed';
   applicationStatus: 'Pending' | 'Accepted' | 'Rejected' | 'Cancelled';
   workshopId?: string;
   createdBy?: string;
@@ -60,7 +60,7 @@ export interface RepairRequest {
   partsUsed?: string;
   fromLocation?: string;
   toLocation?: string;
-  applicationType?: string;
+  applicationType?: 'Internal Repair Order (IRO)' | 'Outsourced / External Service';
   rejectionReason?: string;
   acceptedBy?: string;
   approvalDate?: string;
