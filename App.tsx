@@ -71,24 +71,18 @@ const AppContent: React.FC = () => {
   } = useData();
 
   useEffect(() => {
-    let maxId = 262000;
-    
-    // 1. Check settings tab if available
-    if (settings) {
-      const val = parseInt(settings.lastJobCardNumber);
-      if (!isNaN(val)) maxId = val;
-    }
-    
-    // 2. Check existing repair requests to find the actual last number
-    if (repairRequests && repairRequests.length > 0) {
-      const ids = repairRequests.map(r => parseInt(r.id)).filter(id => !isNaN(id));
-      if (ids.length > 0) {
-        const currentMax = Math.max(...ids);
-        if (currentMax > maxId) maxId = currentMax;
+    if (repairRequests.length > 0) {
+      const maxId = Math.max(...repairRequests.map(r => parseInt(r.id)).filter(id => !isNaN(id)));
+      if (maxId > lastJobCardNumber) {
+        setLastJobCardNumber(maxId);
       }
     }
-    
-    setLastJobCardNumber(maxId);
+    if (settings && settings.lastJobCardNumber) {
+      const settingNum = parseInt(settings.lastJobCardNumber);
+      if (!isNaN(settingNum) && settingNum > lastJobCardNumber) {
+        setLastJobCardNumber(settingNum);
+      }
+    }
   }, [repairRequests, settings]);
 
 
@@ -164,7 +158,7 @@ const AppContent: React.FC = () => {
   const handleUpdateRequest = async (updatedRequest: RepairRequest) => {
     // Construct payload with explicit key order to match sheet headers
     const payload = {
-      id: String(updatedRequest.id).trim(),
+      id: updatedRequest.id,
       equipmentId: updatedRequest.equipmentId,
       driverName: updatedRequest.driverName,
       mileage: updatedRequest.mileage || '',
@@ -173,15 +167,7 @@ const AppContent: React.FC = () => {
       dateIn: updatedRequest.dateIn,
       timeIn: updatedRequest.timeIn,
       status: updatedRequest.status,
-      applicationStatus: updatedRequest.applicationStatus || 'Pending',
       workshopId: updatedRequest.workshopId || '',
-      createdBy: updatedRequest.createdBy || '',
-      fromLocation: updatedRequest.fromLocation || '',
-      toLocation: updatedRequest.toLocation || '',
-      applicationType: updatedRequest.applicationType || '',
-      rejectionReason: updatedRequest.rejectionReason || '',
-      acceptedBy: updatedRequest.acceptedBy || '',
-      approvalDate: updatedRequest.approvalDate || '',
       dateOut: updatedRequest.dateOut || '',
       timeOut: updatedRequest.timeOut || '',
       workDone: updatedRequest.faults.map(f => f.workDone || '').filter(Boolean).join('; '),
@@ -308,7 +294,7 @@ const AppContent: React.FC = () => {
           </div>
         );
       case 'pending':
-        return <PendingRequestsList repairRequests={repairRequests.filter(r => r.status === 'Pending')} onUpdateRequest={handleUpdateRequest} equipments={equipments} workshops={workshops} />;
+        return <PendingRequestsList repairRequests={repairRequests.filter(r => r.status === 'Pending' || r.status === 'Accepted')} onUpdateRequest={handleUpdateRequest} equipments={equipments} workshops={workshops} />;
       case 'completed':
         return <CompletedRequestsList repairRequests={repairRequests.filter(r => r.status === 'Completed')} equipments={equipments} workshops={workshops} />;
       case 'workshops':

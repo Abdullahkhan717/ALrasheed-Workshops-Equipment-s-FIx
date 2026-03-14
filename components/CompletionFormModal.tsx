@@ -99,46 +99,54 @@ export const CompletionFormModal: React.FC<CompletionFormModalProps> = ({ reques
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in-up">
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="p-6 border-b flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-800">{t('workDone')}</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-2 md:p-4 animate-fade-in-up">
+      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[95vh] md:max-h-[90vh] flex flex-col">
+        <div className="p-4 md:p-6 border-b flex justify-between items-center">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800">{t('workDone')}</h2>
             <button type="button" onClick={onClose} className="p-1 text-gray-400 hover:text-gray-600 rounded-full">
                 <XMarkIcon className="h-6 w-6" />
             </button>
         </div>
 
-        <div className="p-6 space-y-6 overflow-y-auto">
+        <div className="p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto">
             {faults.map((fault, index) => (
-                <div key={fault.id} className="p-4 border rounded-lg bg-gray-50">
-                    <p className="font-semibold text-gray-800 mb-2">{index + 1}. {t('fault_colon')} <span className="font-normal text-gray-600">{fault.description}</span></p>
+                <div key={fault.id} className="p-3 md:p-4 border rounded-lg bg-gray-50">
+                    <p className="font-semibold text-gray-800 mb-2 text-sm md:text-base">{index + 1}. {t('fault_colon')} <span className="font-normal text-gray-600">{fault.description}</span></p>
                     
                     <div>
-                        <label htmlFor={`workDone-${fault.id}`} className="block text-sm font-medium text-gray-700">{t('workDone')}</label>
+                        <label htmlFor={`workDone-${fault.id}`} className="block text-xs md:text-sm font-medium text-gray-700">{t('workDone')}</label>
                         <textarea
                             id={`workDone-${fault.id}`}
                             value={fault.workDone}
                             onChange={(e) => handleFaultChange(fault.id, 'workDone', e.target.value)}
                             rows={3}
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-sm"
                             placeholder="..."
                         />
                     </div>
 
                     <div className="mt-4">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">{t('partsUsed')}</h4>
-                        <div className="space-y-2">
+                        <h4 className="text-xs md:text-sm font-medium text-gray-700 mb-2">{t('partsUsed')}</h4>
+                        <div className="space-y-3 md:space-y-2">
                             {fault.partsUsed.map(part => (
-                                <div key={part.id} className="grid grid-cols-[1fr_100px_auto] gap-2 items-center">
-                                    <input type="text" value={part.name} onChange={(e) => handlePartChange(fault.id, part.id, 'name', e.target.value)} placeholder={t('partName')} className="p-2 border border-gray-300 rounded-md text-sm"/>
-                                    <input type="text" value={part.quantity} onChange={(e) => handlePartChange(fault.id, part.id, 'quantity', e.target.value)} placeholder={t('quantity')} className="p-2 border border-gray-300 rounded-md text-sm"/>
-                                    <button type="button" onClick={() => handleRemovePart(fault.id, part.id)} className="p-2 text-red-500 hover:bg-red-100 rounded-full">
-                                        <TrashIcon className="h-4 w-4"/>
-                                    </button>
+                                <div key={part.id} className="flex flex-col md:grid md:grid-cols-[1fr_100px_auto] gap-2 items-start md:items-center bg-white md:bg-transparent p-2 md:p-0 rounded-md border md:border-0">
+                                    <div className="w-full md:w-auto">
+                                        <label className="md:hidden text-[10px] text-gray-500 mb-1 block">{t('partName')}</label>
+                                        <input type="text" value={part.name} onChange={(e) => handlePartChange(fault.id, part.id, 'name', e.target.value)} placeholder={t('partName')} className="w-full p-2 border border-gray-300 rounded-md text-sm"/>
+                                    </div>
+                                    <div className="w-full md:w-auto flex gap-2 items-end">
+                                        <div className="flex-1">
+                                            <label className="md:hidden text-[10px] text-gray-500 mb-1 block">{t('quantity')}</label>
+                                            <input type="text" value={part.quantity} onChange={(e) => handlePartChange(fault.id, part.id, 'quantity', e.target.value)} placeholder={t('quantity')} className="w-full p-2 border border-gray-300 rounded-md text-sm"/>
+                                        </div>
+                                        <button type="button" onClick={() => handleRemovePart(fault.id, part.id)} className="p-2 text-red-500 hover:bg-red-100 rounded-full">
+                                            <TrashIcon className="h-4 w-4"/>
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        <button type="button" onClick={() => handleAddPart(fault.id)} className="mt-2 flex items-center text-sm text-green-600 hover:text-green-800">
+                        <button type="button" onClick={() => handleAddPart(fault.id)} className="mt-2 flex items-center text-xs md:text-sm text-green-600 hover:text-green-800">
                            <PlusIcon className="h-4 w-4 me-1" /> {t('addPart')}
                         </button>
                     </div>
@@ -146,22 +154,26 @@ export const CompletionFormModal: React.FC<CompletionFormModalProps> = ({ reques
             ))}
         </div>
         
-        <div className="p-6 border-t mt-auto bg-gray-50 rounded-b-xl">
-            <div className="flex items-center justify-end space-x-4">
-                <div>
-                    <label className="block text-xs font-medium text-gray-600">{t('dateOut')}</label>
-                    <input type="date" value={dateOut} onChange={e => setDateOut(e.target.value)} className="p-2 border border-gray-300 rounded-md"/>
+        <div className="p-4 md:p-6 border-t mt-auto bg-gray-50 rounded-b-xl">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-4">
+                <div className="flex gap-4">
+                    <div className="flex-1">
+                        <label className="block text-[10px] md:text-xs font-medium text-gray-600 mb-1">{t('dateOut')}</label>
+                        <input type="date" value={dateOut} onChange={e => setDateOut(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md text-sm"/>
+                    </div>
+                    <div className="flex-1">
+                        <label className="block text-[10px] md:text-xs font-medium text-gray-600 mb-1">{t('timeOut')}</label>
+                        <input type="time" value={timeOut} onChange={e => setTimeOut(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md text-sm"/>
+                    </div>
                 </div>
-                <div>
-                    <label className="block text-xs font-medium text-gray-600">{t('timeOut')}</label>
-                    <input type="time" value={timeOut} onChange={e => setTimeOut(e.target.value)} className="p-2 border border-gray-300 rounded-md"/>
+                <div className="flex gap-2">
+                    <button type="button" onClick={onClose} className="flex-1 md:flex-none bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 text-sm font-medium">
+                      {t('cancel')}
+                    </button>
+                    <button type="submit" className="flex-1 md:flex-none bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm font-medium">
+                      {t('saveCompletion')}
+                    </button>
                 </div>
-                <button type="button" onClick={onClose} className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">
-                  {t('cancel')}
-                </button>
-                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                  {t('saveCompletion')}
-                </button>
             </div>
         </div>
       </form>

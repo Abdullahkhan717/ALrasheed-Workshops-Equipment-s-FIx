@@ -1,30 +1,19 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-if (!API_KEY) {
-  throw new Error('GEMINI_API_KEY is not set');
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
-
-export async function translateText(text: string, targetLanguage: string = 'English'): Promise<string> {
+export const translateText = async (text: string): Promise<string> => {
+  if (!text) return "";
+  
   try {
-    const model = ai.models.generateContent;
-    const prompt = `Translate the following text to ${targetLanguage}: "${text}"`;
-
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: prompt,
+      contents: `Translate the following text to English. If it is already in English, translate it to Arabic. Only return the translated text: "${text}"`,
     });
-
-    const translatedText = response.text;
-    if (translatedText) {
-      return translatedText.trim();
-    }
-    return 'Translation failed';
+    
+    return response.text || text;
   } catch (error) {
-    console.error('Error translating text:', error);
-    return 'Translation error';
+    console.error("Translation error:", error);
+    return text;
   }
-}
+};

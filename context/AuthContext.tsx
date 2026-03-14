@@ -51,7 +51,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = (userId: string, password: string, save: boolean): boolean => {
-    const user = users.find(u => u.id.toLowerCase() === userId.toLowerCase() && u.password === password);
+    const user = users.find(u => 
+      String(u.id).toLowerCase() === String(userId).toLowerCase() && 
+      String(u.password).trim() === String(password).trim()
+    );
     if (user) {
       if (user.status === 'pending') {
         alert('Your account is pending approval from an administrator.');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Equipment, RepairRequest, Workshop } from '../types';
 import { JobCard } from './JobCard';
-import { PrinterIcon, WhatsappIcon, DownloadIcon } from './Icons';
+import { PrinterIcon, WhatsappIcon, DownloadIcon, EyeIcon } from './Icons';
 import { downloadHistoryCSV } from '../utils/csvExport';
 import { useTranslation } from '../hooks/useTranslation';
 import { CompletionFormModal } from './CompletionFormModal';
@@ -105,12 +105,12 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
   };
 
   return (
-    <div className="p-8">
-       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold text-gray-800">{t('repairHistory')}</h1>
+    <div className="p-4 md:p-8">
+       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-800">{t('repairHistory')}</h1>
         <button
           onClick={handleDownloadExcel}
-          className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+          className="w-full md:w-auto flex items-center justify-center bg-green-600 text-white px-4 py-2.5 rounded-lg shadow-md hover:bg-green-700 transition-colors font-medium"
         >
           <DownloadIcon className="h-5 w-5 me-2" />
           {t('downloadExcel')}
@@ -144,15 +144,15 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
         />
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
         {propSelectedEquipmentId === undefined && (
           <div>
-            <label htmlFor="equipment-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectEquipmentToFilter')}</label>
+            <label htmlFor="equipment-select" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{t('selectEquipmentToFilter')}</label>
             <select
               id="equipment-select"
               value={selectedEquipmentId}
               onChange={e => setSelectedEquipmentId(e.target.value)}
-              className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              className="block w-full p-2.5 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
             >
               <option value="">{t('allEquipment')}</option>
               {equipments.map(e => (
@@ -164,12 +164,12 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
           </div>
         )}
         <div>
-          <label htmlFor="workshop-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectWorkshop')}</label>
+          <label htmlFor="workshop-select" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{t('selectWorkshop')}</label>
           <select
             id="workshop-select"
             value={selectedWorkshopId}
             onChange={e => setSelectedWorkshopId(e.target.value)}
-            className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+            className="block w-full p-2.5 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
           >
             <option value="">{t('allWorkshops')}</option>
             {workshops.map(w => (
@@ -180,23 +180,23 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('timeFilter')}</label>
-          <div className="flex space-x-2">
+          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{t('timeFilter')}</label>
+          <div className="flex bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setTimeFilter('all')}
-              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'all' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              className={`flex-1 py-1.5 text-[10px] font-bold rounded-md uppercase transition-all ${timeFilter === 'all' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             >
               {t('history_all')}
             </button>
             <button
               onClick={() => setTimeFilter('daily')}
-              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'daily' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              className={`flex-1 py-1.5 text-[10px] font-bold rounded-md uppercase transition-all ${timeFilter === 'daily' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             >
               {t('history_daily')}
             </button>
             <button
               onClick={() => setTimeFilter('monthly')}
-              className={`px-3 py-2 text-xs font-medium rounded-md border ${timeFilter === 'monthly' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              className={`flex-1 py-1.5 text-[10px] font-bold rounded-md uppercase transition-all ${timeFilter === 'monthly' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             >
               {t('history_monthly')}
             </button>
@@ -205,25 +205,25 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
         <div>
           {timeFilter === 'monthly' && (
             <>
-              <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectMonth')}</label>
+              <label htmlFor="month-select" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{t('selectMonth')}</label>
               <input
                 type="month"
                 id="month-select"
                 value={selectedMonth}
                 onChange={e => setSelectedMonth(e.target.value)}
-                className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
               />
             </>
           )}
           {timeFilter === 'daily' && (
             <>
-              <label htmlFor="date-select" className="block text-sm font-medium text-gray-700 mb-1">{t('selectDate')}</label>
+              <label htmlFor="date-select" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{t('selectDate')}</label>
               <input
                 type="date"
                 id="date-select"
                 value={selectedDate}
                 onChange={e => setSelectedDate(e.target.value)}
-                className="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
               />
             </>
           )}
@@ -233,17 +233,37 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
       <div className="space-y-4">
         {filteredRequests.length > 0 ? (
           filteredRequests.map((req, index) => (
-            <div key={`${req.id}-${index}`} className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="font-bold text-lg text-gray-800">
-                    {!selectedEquipmentId && <span className="text-green-600 font-semibold block mb-1">{getEquipmentInfo(req.equipmentId)}</span>}
-                    {t('requestId')}: {req.id}
-                  </p>
-                  <p className="text-sm text-gray-500">{t('dateIn')}: {formatDate(req.dateIn)} at {formatTime(req.timeIn)}</p>
+            <div key={`${req.id}-${index}`} className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                <div className="w-full sm:w-auto">
+                  <div className="flex items-center justify-between sm:justify-start sm:gap-3 mb-1">
+                    <span className="text-xs font-bold text-green-600 uppercase tracking-wider">{t('jobCardNo')} {req.id}</span>
+                    <div className="flex gap-2 sm:hidden">
+                      <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${
+                          req.applicationStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                          req.applicationStatus === 'Accepted' ? 'bg-green-100 text-green-800' :
+                          req.applicationStatus === 'Rejected' ? 'bg-orange-100 text-orange-800' :
+                          'bg-red-100 text-red-800'
+                      }`}>
+                        {t(req.applicationStatus?.toLowerCase() as any || 'pending')}
+                      </span>
+                      <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${
+                          req.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                          req.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                          'bg-green-100 text-green-800'
+                      }`}>
+                        {t(req.status.toLowerCase() as any)}
+                      </span>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {!selectedEquipmentId && getEquipmentInfo(req.equipmentId)}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">{t('dateIn')}: {formatDate(req.dateIn)} at {formatTime(req.timeIn)}</p>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
+                
+                <div className="hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
+                    <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase ${
                         req.applicationStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
                         req.applicationStatus === 'Accepted' ? 'bg-green-100 text-green-800' :
                         req.applicationStatus === 'Rejected' ? 'bg-orange-100 text-orange-800' :
@@ -251,70 +271,90 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                     }`}>
                       {t(req.applicationStatus?.toLowerCase() as any || 'pending')}
                     </span>
-                    <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
-                        req.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                    <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase ${
+                        req.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                        req.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                        'bg-green-100 text-green-800'
                     }`}>
                       {t(req.status.toLowerCase() as any)}
                     </span>
                 </div>
               </div>
-              <div className="mt-4 border-t pt-4">
-                <p><span className="font-semibold">{t('purpose')}:</span> {t(`purpose_${req.purpose.toLowerCase().replace(/ /g, '_')}`)}</p>
-                <p><span className="font-semibold">{t('driver')}:</span> {req.driverName}</p>
-                
-                {req.rejectionReason && (
-                  <div className="mt-2 p-3 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm">
-                    <span className="font-bold">{req.status === 'Rejected' ? t('rejectionReason') : t('cancellationReason')}:</span> {req.rejectionReason}
-                  </div>
-                )}
 
-                <p className="font-semibold mt-2">{req.status === 'Completed' ? t('resolvedFaults') : t('faults')}:</p>
-                <ul className="list-disc list-inside text-gray-600">
-                  {req.faults.map(f => (
-                    <li key={f.id}>
-                      {f.description}
-                      <button 
-                        onClick={async () => {
-                          setTranslating(f.id);
-                          const translation = await translateText(f.description);
-                          setTranslatedTexts(prev => ({ ...prev, [f.id]: translation }));
-                          setTranslating(null);
-                        }}
-                        className="text-xs text-green-500 ml-2"
-                        disabled={translating === f.id}
-                      >
-                        {translating === f.id ? 'Translating...' : 'Translate'}
-                      </button>
-                      {translatedTexts[f.id] && <p className="text-sm text-gray-500">{translatedTexts[f.id]}</p>}
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-50 pt-4">
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="text-gray-500 w-24 flex-shrink-0">{t('purpose')}:</span>
+                    <span className="font-medium text-gray-800">{t(`purpose_${req.purpose.toLowerCase().replace(/ /g, '_')}`)}</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="text-gray-500 w-24 flex-shrink-0">{t('driver')}:</span>
+                    <span className="font-medium text-gray-800">{req.driverName}</span>
+                  </div>
+                  
+                  {req.rejectionReason && (
+                    <div className="mt-2 p-3 bg-red-50 border border-red-100 rounded-lg text-red-700 text-xs">
+                      <span className="font-bold">{req.status === 'Rejected' ? t('rejectionReason') : t('cancellationReason')}:</span> {req.rejectionReason}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{req.status === 'Completed' ? t('resolvedFaults') : t('faults')}:</p>
+                  <ul className="space-y-2">
+                    {req.faults.map(f => (
+                      <li key={f.id} className="bg-gray-50 p-2 rounded-lg border border-gray-100">
+                        <div className="flex justify-between items-start gap-2">
+                          <span className="text-sm text-gray-700">{f.description}</span>
+                          <button 
+                            onClick={async () => {
+                              setTranslating(f.id);
+                              const translation = await translateText(f.description);
+                              setTranslatedTexts(prev => ({ ...prev, [f.id]: translation }));
+                              setTranslating(null);
+                            }}
+                            className="text-[10px] font-bold text-green-600 uppercase hover:text-green-700 flex-shrink-0"
+                            disabled={translating === f.id}
+                          >
+                            {translating === f.id ? t('translating') : t('translate')}
+                          </button>
+                        </div>
+                        {translatedTexts[f.id] && <p className="text-xs text-gray-500 mt-1 italic border-t border-gray-200 pt-1">{translatedTexts[f.id]}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between mt-4 border-t pt-4">
-                <div className="flex items-center space-x-2">
-                    <button onClick={() => setRequestToPrint(req)} className="flex items-center text-sm bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-300">
-                        <PrinterIcon className="h-4 w-4 me-2" /> {t('pdfPrint')}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between mt-6 pt-4 border-t border-gray-50 gap-3">
+                <div className="flex gap-2">
+                    <button onClick={() => setRequestToPrint(req)} className="flex-1 sm:flex-none flex items-center justify-center text-xs font-bold bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-colors uppercase">
+                        <PrinterIcon className="h-4 w-4 me-2" /> {t('pdf')}
                     </button>
-                    <button onClick={() => handleShare(req)} className="flex items-center text-sm bg-green-100 text-green-800 px-3 py-1.5 rounded-md hover:bg-green-200">
+                    <button onClick={() => handleShare(req)} className="flex-1 sm:flex-none flex items-center justify-center text-xs font-bold bg-green-50 text-green-700 px-4 py-2.5 rounded-lg hover:bg-green-100 transition-colors uppercase">
                         <WhatsappIcon className="h-4 w-4 me-2" /> {t('share')}
                     </button>
                 </div>
+                
                 {req.status === 'Pending' ? (
-                    <button onClick={() => setRequestToComplete(req)} className="bg-green-500 text-white px-3 py-1.5 rounded-md hover:bg-green-600 text-sm">
+                    <button onClick={() => setRequestToComplete(req)} className="w-full sm:w-auto bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 text-xs font-bold uppercase shadow-sm transition-colors">
                       {t('markAsCompleted')}
                     </button>
                 ) : (
-                    <div>
-                       <p className="text-sm text-gray-500">{t('completedOn')}: {formatDate(req.dateOut)} at {formatTime(req.timeOut)}</p>
+                    <div className="text-end">
+                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('completedOn')}</p>
+                       <p className="text-xs font-medium text-gray-600">{formatDate(req.dateOut)} {formatTime(req.timeOut)}</p>
                     </div>
                 )}
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-10 bg-white rounded-lg shadow-md">
-            <p className="text-gray-500">{selectedEquipmentId ? t('noHistoryForEquipment') : t('noRepairHistoryFound')}</p>
+          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <EyeIcon className="h-8 w-8 text-gray-300" />
+            </div>
+            <p className="text-gray-500 font-medium">{selectedEquipmentId ? t('noHistoryForEquipment') : t('noRepairHistoryFound')}</p>
           </div>
         )}
       </div>

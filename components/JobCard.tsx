@@ -27,58 +27,97 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
     window.print();
   };
 
-  const handleDownloadPdf = async () => {
-    if (!printRef.current) return;
+  const generatePdfBlob = async (): Promise<{ blob: Blob; pdf: any } | null> => {
+    if (!printRef.current) return null;
     try {
+      const element = printRef.current;
       const { jsPDF } = jspdf;
-      const canvas = await html2canvas(printRef.current, { scale: 2 });
+      
+      // Use html2canvas to capture the element
+      // We don't need to force width here if we set it in the style, 
+      // but let's ensure it's captured at a high resolution
+      const canvas = await html2canvas(element, { 
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        windowWidth: 800 // Force the virtual window width for consistent layout
+      });
+      
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'p',
         unit: 'mm',
         format: 'a4',
       });
+      
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`JobCard-${request.id}.pdf`);
+      return { blob: pdf.output('blob'), pdf };
     } catch (error) {
-        console.error("Error generating PDF", error);
-        alert(t('alert_pdfError'));
+      console.error("Error generating PDF blob", error);
+      return null;
     }
   };
 
-  const handleGeneratePdfForShare = async () => {
-    if (!printRef.current) return;
+  const handleDownloadPdf = async () => {
+    const result = await generatePdfBlob();
+    if (result) {
+      result.pdf.save(`JobCard-${request.id}.pdf`);
+    } else {
+      alert(t('alert_pdfError'));
+    }
+  };
+
+  const handleShare = async () => {
+    const equipmentInfo = language === 'ar' && equipment?.arabicName 
+      ? `${equipment.arabicName} (${equipment?.serialNumber})` 
+      : `${equipment?.equipmentNumber} (${equipment?.serialNumber})`;
+    
+    const message = `${t('shareMessage')} ${equipmentInfo}. \n${t('jobCardNo')}: ${request.id}`;
+    
     try {
-      const { jsPDF } = jspdf;
-      const canvas = await html2canvas(printRef.current, { scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'p',
-        unit: 'mm',
-        format: 'a4',
-      });
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`JobCard-${request.id}.pdf`);
-      
-      const equipmentInfo = language === 'ar' && equipment?.arabicName ? `${equipment.arabicName} (${equipment?.serialNumber})` : `${equipment?.equipmentNumber} (${equipment?.serialNumber})`;
-      const message = `${t('shareMessage')} ${equipmentInfo}. \n${t('jobCardNo')}: ${request.id}`;
+      // Try Web Share API first (better for mobile)
+      if (navigator.share) {
+        const result = await generatePdfBlob();
+        if (result) {
+          const file = new File([result.blob], `JobCard-${request.id}.pdf`, { type: 'application/pdf' });
+          
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: `Job Card ${request.id}`,
+              text: message,
+            });
+            return;
+          }
+        }
+        
+        // If file sharing not supported but text sharing is
+        await navigator.share({
+          title: `Job Card ${request.id}`,
+          text: message,
+        });
+      } else {
+        throw new Error('Web Share not supported');
+      }
+    } catch (error) {
+      // Fallback to WhatsApp
       const encodedMessage = encodeURIComponent(message);
       window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
       
-      onClose();
-    } catch (error) {
-        console.error("Error generating PDF for sharing", error);
-        alert(t('alert_pdfShareError'));
+      // If they wanted to share, they probably want the PDF too
+      const result = await generatePdfBlob();
+      if (result) {
+        result.pdf.save(`JobCard-${request.id}.pdf`);
+      }
     }
   };
 
   useEffect(() => {
     if (onShare) {
-        handleGeneratePdfForShare();
+        handleShare();
     }
   }, [onShare]);
 
@@ -86,30 +125,49 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
   const primaryForeman = toLocationData?.workshopManager || 'Waseem khan';
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">
-      <div className="bg-gray-100 rounded-lg w-full max-w-4xl max-h-full overflow-y-auto">
-        <div className="p-4 bg-white sticky top-0 z-10 flex justify-between items-center print:hidden border-b">
-            <h2 className="text-lg font-bold">{t('jobCardPreview')}</h2>
-            <div>
-                 <button onClick={handleDownloadPdf} className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg me-2 hover:bg-green-700">
-                    <DownloadIcon className="h-5 w-5 me-2" />
-                    {t('downloadPDF')}
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-0 md:p-4">
+      <div className="bg-gray-100 rounded-none md:rounded-lg w-full max-w-4xl h-full md:max-h-[90vh] flex flex-col">
+        <div className="p-4 bg-white sticky top-0 z-10 flex justify-between items-center print:hidden border-b shrink-0">
+            <h2 className="text-sm md:text-lg font-bold truncate mr-2">{t('jobCardPreview')}</h2>
+            <div className="flex items-center gap-1 md:gap-2">
+                 <button 
+                  onClick={handleDownloadPdf} 
+                  className="flex items-center bg-green-600 text-white p-2 md:px-4 md:py-2 rounded-lg hover:bg-green-700 transition-colors"
+                  title={t('downloadPDF')}
+                >
+                    <DownloadIcon className="h-5 w-5 md:me-2" />
+                    <span className="hidden md:inline text-sm font-medium">{t('downloadPDF')}</span>
                 </button>
-                <button onClick={handleGeneratePdfForShare} className="flex items-center bg-teal-600 text-white px-4 py-2 rounded-lg me-2 hover:bg-teal-700">
-                    <ShareIcon className="h-5 w-5 me-2" />
-                    {t('shareOnWhatsApp')}
+                <button 
+                  onClick={handleShare} 
+                  className="flex items-center bg-teal-600 text-white p-2 md:px-4 md:py-2 rounded-lg hover:bg-teal-700 transition-colors"
+                  title={t('shareOnWhatsApp')}
+                >
+                    <ShareIcon className="h-5 w-5 md:me-2" />
+                    <span className="hidden md:inline text-sm font-medium">{t('shareOnWhatsApp')}</span>
                 </button>
-                <button onClick={handlePrint} className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg me-2 hover:bg-green-700">
-                    <PrinterIcon className="h-5 w-5 me-2" />
-                    {t('print')}
+                <button 
+                  onClick={handlePrint} 
+                  className="hidden sm:flex items-center bg-gray-600 text-white p-2 md:px-4 md:py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                  title={t('print')}
+                >
+                    <PrinterIcon className="h-5 w-5 md:me-2" />
+                    <span className="hidden md:inline text-sm font-medium">{t('print')}</span>
                 </button>
-                <button onClick={onClose} className="bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
-                    <XMarkIcon className="h-6 w-6" />
+                <button onClick={onClose} className="bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 transition-colors ml-1">
+                    <XMarkIcon className="h-5 w-5 md:h-6 md:w-6" />
                 </button>
             </div>
         </div>
         
-        <div id="print-section" className="p-8 bg-white" ref={printRef} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="flex-1 overflow-auto bg-gray-200 p-0 md:p-4 flex justify-center">
+          <div 
+            id="print-section" 
+            className="p-4 md:p-8 bg-white shadow-lg origin-top scale-[0.45] sm:scale-75 md:scale-100" 
+            style={{ width: '800px', minHeight: '1123px', flexShrink: 0 }} 
+            ref={printRef} 
+            dir={language === 'ar' ? 'rtl' : 'ltr'}
+          >
           <div className="border-4 border-double border-black p-6 mb-6">
             <div className="flex justify-between items-center border-b-2 border-black pb-4 mb-6">
               <div className="text-start">
@@ -140,17 +198,6 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                 <div className="flex border-b border-gray-200 py-1">
                   <span className="w-32 font-bold text-xs uppercase text-gray-500">To Workshop</span>
                   <span className="font-semibold text-sm">{request.toLocation || '-'}</span>
-                </div>
-                <div className="flex border-b border-gray-200 py-1">
-                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('applicationStatus')}</span>
-                  <span className={`font-bold text-sm uppercase ${
-                    request.applicationStatus === 'Accepted' ? 'text-green-600' : 
-                    request.applicationStatus === 'Rejected' ? 'text-orange-600' : 
-                    request.applicationStatus === 'Cancelled' ? 'text-red-600' : 
-                    'text-yellow-600'
-                  }`}>
-                    {t(request.applicationStatus?.toLowerCase() as any || 'pending')}
-                  </span>
                 </div>
               </div>
               
@@ -304,5 +351,6 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
