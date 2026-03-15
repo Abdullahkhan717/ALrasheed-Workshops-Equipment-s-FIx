@@ -20,7 +20,55 @@ export const TransferHistory: React.FC<TransferHistoryProps> = ({ selectedEquipm
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {completedTransfers.length === 0 ? (
+          <div className="text-center py-10 text-gray-500 bg-white rounded-lg border border-gray-200">
+            {t('noTransferHistoryFound')}
+          </div>
+        ) : (
+          completedTransfers.map((req) => {
+            const equipment = equipments.find(e => e.id === req.equipmentId);
+            return (
+              <div key={req.id} className="bg-white p-4 rounded-lg shadow border border-gray-200">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="font-bold text-gray-900">
+                    {equipment?.equipmentNumber || req.equipmentId}
+                  </div>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    req.status.toLowerCase() === 'accepted' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {t(req.status.toLowerCase())}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  <div className="flex items-center">
+                    <span>{req.fromLocation}</span>
+                    <ArrowsRightLeftIcon className="h-3 w-3 mx-2 text-gray-400" />
+                    <span className="text-green-600">{req.toLocation}</span>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 mb-2 truncate">
+                  {req.reason}
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                  <div>
+                    <span className="font-medium">{t('requester')}:</span> {req.requesterName}
+                  </div>
+                  <div>
+                    <span className="font-medium">{t('approver')}:</span> {req.approver || req.acceptedBy || req.approvedBy || '-'}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <table className="hidden md:table min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left rtl:text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('equipment')}</th>

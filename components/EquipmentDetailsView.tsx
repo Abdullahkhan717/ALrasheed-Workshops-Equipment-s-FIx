@@ -77,28 +77,28 @@ export const EquipmentDetailsView: React.FC<EquipmentDetailsViewProps> = ({
       </div>
 
       {activeTab === 'details' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8 mb-8">
-          <div className="flex flex-col">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className="flex flex-col p-4 bg-white rounded-lg border border-green-100 shadow-sm">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('type')}</span>
             <span className="font-bold text-gray-800">{t(equipment.equipmentType)}</span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-4 bg-white rounded-lg border border-green-100 shadow-sm">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('make')}</span>
             <span className="font-bold text-gray-800">{equipment.make}</span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-4 bg-white rounded-lg border border-green-100 shadow-sm">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('model')}</span>
             <span className="font-bold text-gray-800">{equipment.modelNumber}</span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-4 bg-white rounded-lg border border-green-100 shadow-sm">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('serialNumber')}</span>
             <span className="font-bold text-gray-800">{equipment.serialNumber}</span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-4 bg-white rounded-lg border border-green-100 shadow-sm">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('power')}</span>
             <span className="font-bold text-gray-800">{equipment.power || '-'}</span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-4 bg-white rounded-lg border border-green-100 shadow-sm">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">{t('location')}</span>
             <span className="font-bold text-gray-800">{equipment.branchLocation}</span>
           </div>

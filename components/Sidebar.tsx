@@ -50,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, onC
 
         <aside className={`
             fixed inset-y-0 start-0 z-40 w-64 bg-white shadow-lg flex flex-col transition-transform duration-300 transform
-            ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+            ${isOpen ? 'translate-x-0' : (language === 'ar' ? 'translate-x-full' : '-translate-x-full')}
             lg:translate-x-0 lg:static lg:inset-0
         `}>
             <div className="flex items-center justify-between h-20 border-b px-4">

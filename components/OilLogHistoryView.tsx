@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useData } from '../context/DataContext';
 import { useTranslation } from '../hooks/useTranslation';
-import { OilLogView } from './OilLogView';
-import { PlusIcon } from './Icons';
 import { formatDate, formatTime } from '../utils/formatters';
 
 interface OilLogHistoryViewProps {
@@ -12,40 +10,16 @@ interface OilLogHistoryViewProps {
 export const OilLogHistoryView: React.FC<OilLogHistoryViewProps> = ({ selectedEquipmentId }) => {
   const { t, language } = useTranslation();
   const { oilLogs, equipments } = useData();
-  const [showForm, setShowForm] = useState(false);
 
   const filteredLogs = oilLogs.filter(log => {
     if (selectedEquipmentId && log.equipmentId !== selectedEquipmentId) return false;
     return true;
   }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  if (showForm) {
-    return (
-      <div>
-        <div className="mb-4">
-          <button 
-            onClick={() => setShowForm(false)}
-            className="text-green-600 hover:underline font-bold"
-          >
-            ← {t('backToHistory') || 'Back to History'}
-          </button>
-        </div>
-        <OilLogView />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-800">{t('oilLogHistory')}</h2>
-        <button 
-          onClick={() => setShowForm(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition flex items-center font-bold"
-        >
-          <PlusIcon className="h-5 w-5 me-2" />
-          {t('newOilLog') || 'New Oil Log'}
-        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
