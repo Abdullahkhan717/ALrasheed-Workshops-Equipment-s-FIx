@@ -2,12 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import type { RepairRequest, Equipment, Workshop } from '../types';
 import { XMarkIcon, PrinterIcon, DownloadIcon, ShareIcon } from './Icons';
 import { useTranslation } from '../hooks/useTranslation';
-
 import { useData } from '../context/DataContext';
-
-declare const jspdf: any;
-declare const html2canvas: any;
-
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import { formatDate, formatTime } from '../utils/formatters';
 
 interface JobCardProps {
@@ -30,13 +27,12 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
   const generatePdfBlob = async (): Promise<{ blob: Blob; pdf: any } | null> => {
     if (!printRef.current) return null;
     try {
-      const element = printRef.current;
-      const { jsPDF } = jspdf;
+        const element = printRef.current;
       
       // Use html2canvas to capture the element
-      // We don't need to force width here if we set it in the style, 
+      // We don't need to force width here if we set it in the style,
       // but let's ensure it's captured at a high resolution
-      const canvas = await html2canvas(element, { 
+      const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
         logging: false,
