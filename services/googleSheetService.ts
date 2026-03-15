@@ -1,6 +1,6 @@
 import type { Equipment, Workshop, RepairRequest, User } from '../types';
 
-const SCRIPT_URL = (import.meta.env.VITE_SHEETDB_URL || 'https://script.google.com/macros/s/AKfycby_IgbwNR2EWn7vwy7XlxNKbgqPmqI6ZE7eZ3_Wkktyfx0TTfP_l00yb6ThGE8d9STJfw/exec').trim();
+const SCRIPT_URL = (import.meta.env.VITE_SHEETDB_URL || 'https://script.google.com/macros/s/AKfycbyklrhCjXNgu0C18mCEqD_KKB576rPc65N0vc-j5or-dL5QPnUXFW4WJJdPrF8n8ku4/exec').trim();
 
 export const getAllData = async () => {
   try {
