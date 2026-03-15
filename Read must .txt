@@ -1,0 +1,125 @@
+Yeh App Vercl per online or working condetion main hy.
+link "https://vercel.com/abdullahkhan717s-projects/remix-al-rasheed-workshops-for-transports"
+Conected google sheet yeh hy
+Google ID vpnu717@gmail
+sheet naem Equipment workshop gethub
+link of sheet.https://docs.google.com/spreadsheets/d/1-lXZuW8HdlgDObPaENvofS0M0QhvD8QcE3-J6FXsdZE/edit?gid=312554978#gid=312554978
+Google scrip,
+ka code URLhttps://script.google.com/macros/s/AKfycbzNEnVhOY3DgqS3OlWyUJKrqXknb43Xdlpv7VSy1yAtN96GlfTktWIt4AIxckmHu-c9mA/exec
+
+or script ,
+// Google Apps Script for Equipment Fix System - ROBUST VERSION
+// Handles: Equipments, RepairRequests, Workshops, OilLogs, Users, Locations
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var result = {};
+  
+  sheets.forEach(function(sheet) {
+    var name = sheet.getName();
+    var data = sheet.getDataRange().getValues();
+    var headers = data[0];
+    var rows = [];
+    
+    for (var i = 1; i < data.length; i++) {
+      var obj = {};
+      for (var j = 0; j < headers.length; j++) {
+        obj[headers[j]] = data[i][j];
+      }
+      rows.push(obj);
+    }
+    result[name] = rows;
+  });
+  
+  return ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var params;
+  try {
+    params = JSON.parse(e.postData.contents);
+  } catch (err) {
+    return response({status: "error", message: "Invalid JSON payload"});
+  }
+  
+  var action = params.action;
+  var sheetName = params.sheetName;
+  var data = params.data;
+  
+  var sheet = ss.getSheetByName(sheetName);
+  if (!sheet) return response({status: "error", message: "Sheet not found: " + sheetName});
+  
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  
+  // Helper function to find value in data object regardless of key casing/spaces
+  function getValue(header) {
+    var h = String(header).toLowerCase().replace(/[^a-z0-9]/g, '');
+    for (var key in data) {
+      var k = String(key).toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (h === k) return data[key];
+      // Special cases for ID
+      if ((h === 'jobcardno' || h === 'id' || h === 'jobcard') && (k === 'id' || k === 'jobcardno' || k === 'jobcard')) return data[key];
+    }
+    return undefined;
+  }
+
+  if (action === 'create') {
+    var newRow = headers.map(function(h) {
+      var val = getValue(h);
+      return val !== undefined ? val : "";
+    });
+    sheet.appendRow(newRow);
+    return response({status: "success"});
+  }
+  
+  if (action === 'update' || action === 'delete') {
+    var sheetData = sheet.getDataRange().getValues();
+    
+    // Find ID column (could be "id", "ID", "Job Card No", etc.)
+    var idIndex = -1;
+    for(var i=0; i<headers.length; i++) {
+      var h = String(headers[i]).toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (h === 'id' || h === 'jobcardno' || h === 'jobcard' || h === 'jobcard#') {
+        idIndex = i;
+        break;
+      }
+    }
+    
+    if (idIndex === -1) return response({status: "error", message: "ID column not found in sheet headers. Please check your sheet headers."});
+    
+    var targetId = String(getValue('id'));
+    var rowIndex = -1;
+    
+    for (var i = 1; i < sheetData.length; i++) {
+      if (String(sheetData[i][idIndex]) === targetId) {
+        rowIndex = i + 1;
+        break;
+      }
+    }
+    
+    if (rowIndex === -1) return response({status: "error", message: "Record not found with ID: " + targetId + " in sheet " + sheetName});
+    
+    if (action === 'update') {
+      var updatedRow = headers.map(function(h, idx) {
+        var val = getValue(h);
+        return val !== undefined ? val : sheetData[rowIndex-1][idx];
+      });
+      sheet.getRange(rowIndex, 1, 1, headers.length).setValues([updatedRow]);
+    } else if (action === 'delete') {
+      sheet.deleteRow(rowIndex);
+    }
+    
+    return response({status: "success"});
+  }
+  
+  return response({status: "error", message: "Unknown action: " + action});
+}
+
+function response(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
