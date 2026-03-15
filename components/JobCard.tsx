@@ -4,9 +4,8 @@ import { XMarkIcon, PrinterIcon, DownloadIcon, ShareIcon } from './Icons';
 import { useTranslation } from '../hooks/useTranslation';
 
 import { useData } from '../context/DataContext';
-
-declare const jspdf: any;
-declare const html2canvas: any;
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import { formatDate, formatTime } from '../utils/formatters';
 
@@ -31,32 +30,27 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
     if (!printRef.current) return null;
     try {
       const element = printRef.current;
-      const { jsPDF } = jspdf;
-      
-      // Use html2canvas to capture the element
-      // We don't need to force width here if we set it in the style, 
-      // but let's ensure it's captured at a high resolution
-      const canvas = await html2canvas(element, { 
+      const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
         logging: false,
-        windowWidth: 800 // Force the virtual window width for consistent layout
+        windowWidth: 1200,
       });
-      
+
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'p',
         unit: 'mm',
         format: 'a4',
       });
-      
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
+
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       return { blob: pdf.output('blob'), pdf };
     } catch (error) {
-      console.error("Error generating PDF blob", error);
+      console.error('Error generating PDF blob', error);
       return null;
     }
   };
