@@ -4,8 +4,9 @@ import { XMarkIcon, PrinterIcon, DownloadIcon, ShareIcon } from './Icons';
 import { useTranslation } from '../hooks/useTranslation';
 
 import { useData } from '../context/DataContext';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+
+declare const jspdf: any;
+declare const html2canvas: any;
 
 import { formatDate, formatTime } from '../utils/formatters';
 
@@ -30,15 +31,18 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
     if (!printRef.current) return null;
     try {
       const element = printRef.current;
+      const { jsPDF } = jspdf;
       
       // Use html2canvas to capture the element
-      const canvas = await html2canvas(element, {
+      // We don't need to force width here if we set it in the style, 
+      // but let's ensure it's captured at a high resolution
+      const canvas = await html2canvas(element, { 
         scale: 2,
         useCORS: true,
         logging: false,
-        windowWidth: 1000,
+        windowWidth: 800 // Force the virtual window width for consistent layout
       });
-
+      
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'p',
@@ -159,34 +163,13 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         <div className="flex-1 overflow-auto bg-gray-200 p-0 md:p-4 flex justify-center">
           <div 
             id="print-section" 
-            className="p-4 md:p-6 bg-white shadow-xl origin-top scale-[0.45] sm:scale-75 md:scale-100" 
+            className="p-4 md:p-8 bg-white shadow-lg origin-top scale-[0.45] sm:scale-75 md:scale-100" 
             style={{ width: '800px', minHeight: '1123px', flexShrink: 0 }} 
             ref={printRef} 
             dir={language === 'ar' ? 'rtl' : 'ltr'}
           >
-            <div className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-4 items-center mb-4 border-b border-slate-300 pb-3">
-              <div className="flex items-center justify-center rounded-lg border border-blue-400 bg-blue-50 h-24">
-                <div className="text-center">
-                  <div className="font-extrabold text-xl text-blue-700">LOGO</div>
-                  <div className="text-xs text-slate-500">Company Name</div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-start gap-2">
-                  <div>
-                    <p className="text-base font-bold">AR Workshop Service</p>
-                    <p className="text-sm text-slate-600">Maintenance & Repair Job Card</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs font-semibold text-slate-600">Request ID: <span className="font-bold text-slate-800">{request.id}</span></p>
-                    <p className="text-xs text-slate-500">Date: {formatDate(request.dateIn)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-slate-700">Workshop Repair Request / طلب اصلاح بالورشہ</h2>
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold">Workshop Repair Request / طلب اصلاح بالورشہ</h1>
             </div>
 
             <div className="grid grid-cols-1 gap-2 mb-6">
