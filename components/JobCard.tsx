@@ -157,8 +157,8 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         <div className="flex-1 overflow-auto bg-gray-200 p-0 md:p-4 flex justify-center">
           <div 
             id="print-section" 
-            className="p-4 md:p-8 bg-white shadow-lg origin-top scale-[0.45] sm:scale-75 md:scale-100" 
-            style={{ width: '800px', minHeight: '1123px', flexShrink: 0 }} 
+            className="p-4 md:p-8 bg-white shadow-lg origin-top w-full max-w-[800px]" 
+            style={{ minHeight: '1123px', flexShrink: 0 }} 
             ref={printRef} 
             dir={language === 'ar' ? 'rtl' : 'ltr'}
           >
