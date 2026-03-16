@@ -40,7 +40,32 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         scale: 2,
         useCORS: true,
         logging: false,
-        windowWidth: 800 // Force the virtual window width for consistent layout
+        windowWidth: 800, // Force the virtual window width for consistent layout
+        onclone: (clonedDoc) => {
+            // Remove all style sheets that might contain oklch
+            for (let i = 0; i < clonedDoc.styleSheets.length; i++) {
+                try {
+                    const sheet = clonedDoc.styleSheets[i];
+                    const rules = sheet.cssRules || sheet.rules;
+                    for (let j = rules.length - 1; j >= 0; j--) {
+                        if (rules[j].cssText.includes('oklch')) {
+                            sheet.deleteRule(j);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error removing rule", e);
+                }
+            }
+
+            // Remove oklch from inline styles
+            const allElements = clonedDoc.querySelectorAll('*');
+            allElements.forEach((el) => {
+                const element = el as HTMLElement;
+                if (element.style.cssText.includes('oklch')) {
+                    element.style.cssText = element.style.cssText.replace(/oklch\([^)]*\)/g, 'black');
+                }
+            });
+        }
       });
       
       const imgData = canvas.toDataURL('image/png');
