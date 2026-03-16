@@ -50,6 +50,26 @@ const AppContent: React.FC = () => {
   const [searchHistoryEquipmentQuery, setSearchHistoryEquipmentQuery] = useState('');
   const [isHistorySearchFocused, setIsHistorySearchFocused] = useState(false);
 
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        setActiveView(event.state.view);
+      } else {
+        setActiveView('dashboard');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    // Only push if it's a new view
+    if (window.history.state?.view !== activeView) {
+      window.history.pushState({ view: activeView }, '');
+    }
+  }, [activeView]);
+
 
   const { language } = useLanguage();
   const { t } = useTranslation();
