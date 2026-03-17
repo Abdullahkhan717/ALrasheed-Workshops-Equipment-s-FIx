@@ -51,6 +51,9 @@ const AppContent: React.FC = () => {
   const [isHistorySearchFocused, setIsHistorySearchFocused] = useState(false);
 
   useEffect(() => {
+    // Set initial state
+    window.history.replaceState({ view: 'dashboard' }, '');
+
     const handlePopState = (event: PopStateEvent) => {
       if (event.state && event.state.view) {
         setActiveView(event.state.view);
