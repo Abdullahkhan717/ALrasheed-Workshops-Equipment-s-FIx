@@ -52,17 +52,46 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
             }
             
             // Replace oklch in all style tags in the head
-            const styleTags = clonedDoc.querySelectorAll('style');
+            const styleTags = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
             styleTags.forEach(style => {
-                style.innerHTML = style.innerHTML.replace(/oklch\([^)]*\)/g, '#000000');
+                if (style.tagName === 'STYLE') {
+                    style.innerHTML = style.innerHTML.replace(/oklch\([^)]*\)/g, '#000000');
+                } else {
+                    // For linked stylesheets, we might not be able to access content easily,
+                    // but we can try to force override styles on the body
+                    const sheet = (style as HTMLLinkElement).sheet;
+                    if (sheet) {
+                        try {
+                            for (let i = 0; i < sheet.cssRules.length; i++) {
+                                const rule = sheet.cssRules[i];
+                                if (rule.cssText.includes('oklch')) {
+                                    // This is hard to replace directly in a linked sheet, 
+                                    // so we add an override style
+                                }
+                            }
+                        } catch (e) {
+                            console.warn("Could not access stylesheet", e);
+                        }
+                    }
+                }
             });
             
-            // Replace oklch in all inline styles
+            // Force override oklch on all elements
             const allElements = clonedDoc.querySelectorAll('*');
             allElements.forEach(el => {
                 const element = el as HTMLElement;
-                if (element.style.cssText.includes('oklch')) {
+                // Check inline styles
+                if (element.style.cssText && element.style.cssText.includes('oklch')) {
                     element.style.cssText = element.style.cssText.replace(/oklch\([^)]*\)/g, '#000000');
+                }
+                // Check computed styles (this is slow, but necessary if oklch is coming from classes)
+                const computed = window.getComputedStyle(element);
+                for (let i = 0; i < computed.length; i++) {
+                    const prop = computed[i];
+                    const val = computed.getPropertyValue(prop);
+                    if (val.includes('oklch')) {
+                        element.style.setProperty(prop, val.replace(/oklch\([^)]*\)/g, '#000000'));
+                    }
                 }
             });
         }
@@ -225,7 +254,7 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                   </span>
                 </div>
                 <div className="flex border-b border-gray-200 py-1">
-                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('jobStatus')}</span>
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('currentStatus')}</span>
                   <span className="font-bold text-sm uppercase text-blue-600">
                     {request.currentJobStatus || 'Under process'}
                   </span>
