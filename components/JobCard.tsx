@@ -51,13 +51,20 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                 element.style.width = '800px';
             }
             
-            // Instead of deleting rules or replacing all oklch, 
-            // just ensure the container has a white background and black text
-            // to override any potential transparency issues.
-            if (element) {
-                element.style.backgroundColor = '#ffffff';
-                element.style.color = '#000000';
-            }
+            // Replace oklch in all style tags in the head
+            const styleTags = clonedDoc.querySelectorAll('style');
+            styleTags.forEach(style => {
+                style.innerHTML = style.innerHTML.replace(/oklch\([^)]*\)/g, '#000000');
+            });
+            
+            // Replace oklch in all inline styles
+            const allElements = clonedDoc.querySelectorAll('*');
+            allElements.forEach(el => {
+                const element = el as HTMLElement;
+                if (element.style.cssText.includes('oklch')) {
+                    element.style.cssText = element.style.cssText.replace(/oklch\([^)]*\)/g, '#000000');
+                }
+            });
         }
       });
       
@@ -157,14 +164,6 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                     <span className="hidden md:inline text-sm font-medium">{t('downloadPDF')}</span>
                 </button>
                 <button 
-                  onClick={handleShare} 
-                  className="flex items-center bg-teal-600 text-white p-2 md:px-4 md:py-2 rounded-lg hover:bg-teal-700 transition-colors"
-                  title={t('shareOnWhatsApp')}
-                >
-                    <ShareIcon className="h-5 w-5 md:me-2" />
-                    <span className="hidden md:inline text-sm font-medium">{t('shareOnWhatsApp')}</span>
-                </button>
-                <button 
                   onClick={handlePrint} 
                   className="hidden sm:flex items-center bg-gray-600 text-white p-2 md:px-4 md:py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   title={t('print')}
@@ -189,12 +188,11 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
           <div className="border-4 border-double border-black p-6 mb-6">
             <div className="flex justify-between items-center border-b-2 border-black pb-4 mb-6">
               <div className="text-start">
-                <h1 className="text-3xl font-black uppercase tracking-tighter">AL RASHEED CO.</h1>
-                <p className="text-sm font-bold uppercase">Workshop Management System</p>
-                <p className="text-xs">Equipment Maintenance & Repair</p>
+                <h1 className="text-3xl font-black uppercase tracking-tighter">{t('jobCard_companyName')}</h1>
+                <p className="text-sm font-bold uppercase">{t('jobCard_subtitle')}</p>
               </div>
               <div className="text-end">
-                <h2 className="text-4xl font-black text-gray-300">JOB CARD</h2>
+                <h2 className="text-4xl font-black text-gray-300">{t('jobCard_title')}</h2>
                 <p className="text-sm font-bold">No: <span className="text-red-600">{request.id}</span></p>
               </div>
             </div>
@@ -226,6 +224,18 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                     {t(request.status.toLowerCase() as any)}
                   </span>
                 </div>
+                <div className="flex border-b border-gray-200 py-1">
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('jobStatus')}</span>
+                  <span className="font-bold text-sm uppercase text-blue-600">
+                    {request.currentJobStatus || 'Under process'}
+                  </span>
+                </div>
+                {request.currentJobStatus !== 'Under process' && (
+                    <div className="flex border-b border-gray-200 py-1">
+                        <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('reason')}</span>
+                        <span className="font-semibold text-sm">{request.statusReason || '-'}</span>
+                    </div>
+                )}
                 <div className="flex border-b border-gray-200 py-1">
                   <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('purpose')}</span>
                   <span className="font-semibold text-sm">{t(`purpose_${request.purpose.toLowerCase().replace(/ /g, '_')}`)}</span>
@@ -280,10 +290,10 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
               <table className="w-full border-collapse border border-black">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border border-black p-2 text-xs font-bold uppercase w-12">Sr.</th>
-                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">Workshop</th>
-                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">Mechanic</th>
-                    <th className="border border-black p-2 text-xs font-bold uppercase">Fault Description</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-12">{t('sr')}</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">{t('workshop')}</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">{t('mechanic')}</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase">{t('description')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -317,21 +327,21 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                   {request.faults.map((fault, index) => (
                     <div key={fault.id} className="border border-gray-200 p-3 rounded">
                       <div className="flex justify-between mb-2">
-                        <p className="text-xs font-bold uppercase text-gray-500">Fault #{index + 1}</p>
+                        <p className="text-xs font-bold uppercase text-gray-500">{t('fault_colon')} #{index + 1}</p>
                         <p className="text-sm font-semibold">{fault.description}</p>
                       </div>
                       <div className="mb-3">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Work Performed</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">{t('workDone_colon')}</p>
                         <p className="text-sm whitespace-pre-wrap bg-gray-50 p-2 rounded border border-gray-100">{fault.workDone || 'N/A'}</p>
                       </div>
                       {fault.partsUsed && fault.partsUsed.length > 0 && (
                         <div>
-                          <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Parts Replaced</p>
+                          <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">{t('partsUsed')}</p>
                           <div className="grid grid-cols-2 gap-2">
                             {fault.partsUsed.map(part => (
                               <div key={part.id} className="flex justify-between text-xs border-b border-gray-100 pb-1">
                                 <span>{part.name}</span>
-                                <span className="font-bold">Qty: {part.quantity}</span>
+                                <span className="font-bold">{t('quantity')}: {part.quantity}</span>
                               </div>
                             ))}
                           </div>
@@ -346,18 +356,18 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
             <div className="mt-12 grid grid-cols-3 gap-12">
               <div className="text-center">
                 <div className="border-t border-black pt-2">
-                  <p className="text-[10px] font-bold uppercase">Operator Signature</p>
+                  <p className="text-[10px] font-bold uppercase">{t('driverSignature')}</p>
                 </div>
               </div>
               <div className="text-center">
                 <p className="font-bold text-sm mb-1">{primaryForeman}</p>
                 <div className="border-t border-black pt-2">
-                  <p className="text-[10px] font-bold uppercase">Foreman Signature</p>
+                  <p className="text-[10px] font-bold uppercase">{t('foremanSignature')}</p>
                 </div>
               </div>
               <div className="text-center">
                 <div className="border-t border-black pt-2">
-                  <p className="text-[10px] font-bold uppercase">Manager Signature</p>
+                  <p className="text-[10px] font-bold uppercase">{t('workshopManagerSignature')}</p>
                 </div>
               </div>
             </div>

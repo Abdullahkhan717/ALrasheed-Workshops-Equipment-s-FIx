@@ -31,6 +31,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
   const [driverName, setDriverName] = useState('');
   const [mileage, setMileage] = useState('');
   const [purpose, setPurpose] = useState<'Repairing' | 'preparing for work' | 'General Checking' | 'Other' | 'Oil Change' | 'Tyre Change'>('Repairing');
+  const [currentJobStatus, setCurrentJobStatus] = useState<'Under process' | 'Hold' | 'Refer to another workshop'>('Under process');
   const [requestType, setRequestType] = useState<'repair' | 'oil' | 'tyre'>('repair');
   const [fromLocation, setFromLocation] = useState(currentUser?.location || '');
   const [toLocation, setToLocation] = useState(currentUser?.location || '');
@@ -223,6 +224,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           driverName,
           mileage,
           purpose: finalPurpose,
+          currentJobStatus,
           faults: finalFaults,
           dateIn: now.toISOString(), // Use ISO for consistent parsing
           timeIn: now.toISOString(),
@@ -243,6 +245,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           driverName,
           mileage: mileage || '',
           purpose: finalPurpose,
+          currentJobStatus,
           faults: JSON.stringify(finalFaults),
           dateIn: now.toISOString(),
           timeIn: now.toISOString(),
@@ -569,6 +572,20 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                         <option value="preparing for work">{t('purpose_preparing_for_work')}</option>
                         <option value="General Checking">{t('purpose_general_checking')}</option>
                         <option value="Other">{t('purpose_other')}</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label htmlFor="currentJobStatus" className="block text-sm font-medium text-gray-700">Current Job Status</label>
+                    <select
+                        id="currentJobStatus"
+                        value={currentJobStatus}
+                        onChange={(e) => setCurrentJobStatus(e.target.value as any)}
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                    >
+                        <option value="Under process">Under process</option>
+                        <option value="Hold">Hold</option>
+                        <option value="Refer to another workshop">Refer to another workshop</option>
                     </select>
                 </div>
                 
