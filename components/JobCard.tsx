@@ -42,29 +42,22 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         logging: false,
         windowWidth: 800, // Force the virtual window width for consistent layout
         onclone: (clonedDoc) => {
-            // Remove all style sheets that might contain oklch
-            for (let i = 0; i < clonedDoc.styleSheets.length; i++) {
-                try {
-                    const sheet = clonedDoc.styleSheets[i];
-                    const rules = sheet.cssRules || sheet.rules;
-                    for (let j = rules.length - 1; j >= 0; j--) {
-                        if (rules[j].cssText.includes('oklch')) {
-                            sheet.deleteRule(j);
-                        }
-                    }
-                } catch (e) {
-                    console.error("Error removing rule", e);
-                }
+            const element = clonedDoc.getElementById('print-section');
+            if (element) {
+                // Remove scaling classes that cause layout issues in PDF
+                element.classList.remove('scale-[0.45]', 'sm:scale-75', 'md:scale-100');
+                element.style.transform = 'none';
+                element.style.scale = '1';
+                element.style.width = '800px';
             }
-
-            // Remove oklch from inline styles
-            const allElements = clonedDoc.querySelectorAll('*');
-            allElements.forEach((el) => {
-                const element = el as HTMLElement;
-                if (element.style.cssText.includes('oklch')) {
-                    element.style.cssText = element.style.cssText.replace(/oklch\([^)]*\)/g, 'black');
-                }
-            });
+            
+            // Instead of deleting rules or replacing all oklch, 
+            // just ensure the container has a white background and black text
+            // to override any potential transparency issues.
+            if (element) {
+                element.style.backgroundColor = '#ffffff';
+                element.style.color = '#000000';
+            }
         }
       });
       
