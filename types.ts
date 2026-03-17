@@ -54,6 +54,9 @@ export interface RepairRequest {
   timeOut?: string;
   status: 'Pending' | 'Completed';
   applicationStatus: 'Pending' | 'Accepted' | 'Rejected' | 'Cancelled';
+  currentJobStatus: 'Under process' | 'Hold' | 'Refer to another workshop';
+  statusReason?: string;
+  referredWorkshopId?: string;
   workshopId?: string;
   createdBy?: string;
   workDone?: string;
