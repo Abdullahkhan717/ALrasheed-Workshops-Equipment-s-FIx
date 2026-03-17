@@ -80,17 +80,32 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
             const allElements = clonedDoc.querySelectorAll('*');
             allElements.forEach(el => {
                 const element = el as HTMLElement;
+                
+                // Helper to replace oklch
+                const replaceOklch = (val: string, prop: string) => {
+                    let replacement = '#000000';
+                    if (prop.includes('background') || prop.includes('border')) {
+                        replacement = 'transparent';
+                    }
+                    return val.replace(/oklch\([^)]*\)/g, replacement);
+                };
+
                 // Check inline styles
-                if (element.style.cssText && element.style.cssText.includes('oklch')) {
-                    element.style.cssText = element.style.cssText.replace(/oklch\([^)]*\)/g, '#000000');
+                for (let i = 0; i < element.style.length; i++) {
+                    const prop = element.style[i];
+                    const val = element.style.getPropertyValue(prop);
+                    if (val.includes('oklch')) {
+                        element.style.setProperty(prop, replaceOklch(val, prop));
+                    }
                 }
-                // Check computed styles (this is slow, but necessary if oklch is coming from classes)
+
+                // Check computed styles
                 const computed = window.getComputedStyle(element);
                 for (let i = 0; i < computed.length; i++) {
                     const prop = computed[i];
                     const val = computed.getPropertyValue(prop);
                     if (val.includes('oklch')) {
-                        element.style.setProperty(prop, val.replace(/oklch\([^)]*\)/g, '#000000'));
+                        element.style.setProperty(prop, replaceOklch(val, prop));
                     }
                 }
             });
