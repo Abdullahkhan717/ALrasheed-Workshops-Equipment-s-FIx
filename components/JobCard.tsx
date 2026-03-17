@@ -76,37 +76,17 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                 }
             });
             
-            // Force override oklch on all elements
+            // Force override styles on all elements to ensure PDF compatibility
             const allElements = clonedDoc.querySelectorAll('*');
             allElements.forEach(el => {
                 const element = el as HTMLElement;
                 
-                // Helper to replace oklch
-                const replaceOklch = (val: string, prop: string) => {
-                    let replacement = '#000000';
-                    if (prop.includes('background') || prop.includes('border')) {
-                        replacement = 'transparent';
-                    }
-                    return val.replace(/oklch\([^)]*\)/g, replacement);
-                };
-
-                // Check inline styles
-                for (let i = 0; i < element.style.length; i++) {
-                    const prop = element.style[i];
-                    const val = element.style.getPropertyValue(prop);
-                    if (val.includes('oklch')) {
-                        element.style.setProperty(prop, replaceOklch(val, prop));
-                    }
-                }
-
-                // Check computed styles
-                const computed = window.getComputedStyle(element);
-                for (let i = 0; i < computed.length; i++) {
-                    const prop = computed[i];
-                    const val = computed.getPropertyValue(prop);
-                    if (val.includes('oklch')) {
-                        element.style.setProperty(prop, replaceOklch(val, prop));
-                    }
+                // Remove any background colors that might be causing the black filling
+                element.style.backgroundColor = 'transparent';
+                
+                // Ensure text is black for readability
+                if (element.style.color && element.style.color.includes('oklch')) {
+                    element.style.color = '#000000';
                 }
             });
         }
