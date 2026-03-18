@@ -50,41 +50,28 @@ const AppContent: React.FC = () => {
   const [searchHistoryEquipmentQuery, setSearchHistoryEquipmentQuery] = useState('');
   const [isHistorySearchFocused, setIsHistorySearchFocused] = useState(false);
 
-  const [lastBackPress, setLastBackPress] = useState(0);
-  const [showToast, setShowToast] = useState(false);
-
   useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => setShowToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    // Set initial state
-    window.history.replaceState({ view: 'dashboard' }, '');
+    // 1. Browser ki history mein ek fake state push karen
+    // Taake jab user back dabaye to pehle ye state remove ho, app exit na ho
+    history.pushState(null, null, window.location.href);
 
     const handlePopState = (event: PopStateEvent) => {
-      if (activeView === 'dashboard') {
-        const now = Date.now();
-        if (now - lastBackPress < 2000) {
-          // Exit
-          window.close();
+        // 2. Alert show karen
+        var confirmExit = confirm("Are you sure you want to exit the app?");
+        
+        if (confirmExit) {
+            // Agar user 'Yes' kare to app close ho jaye
+            // Median/GoNative apps mein exit ke liye ye command use hoti hai:
+            window.location.href = "gonative://app/exit"; 
         } else {
-          setLastBackPress(now);
-          setShowToast(true);
-          window.history.pushState({ view: 'dashboard' }, '');
+            // Agar user 'No' kare to wapis state push kar den
+            history.pushState(null, null, window.location.href);
         }
-      } else if (event.state && event.state.view) {
-        setActiveView(event.state.view);
-      } else {
-        setActiveView('dashboard');
-      }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [activeView, lastBackPress]);
+  }, []);
 
   useEffect(() => {
     // Only push if it's a new view
@@ -697,12 +684,6 @@ const AppContent: React.FC = () => {
           onClose={() => setTransferEquipment(null)} 
           onSave={handleTransferRequest} 
         />
-      )}
-
-      {showToast && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
-          {t('pressAgainToExit')}
-        </div>
       )}
     </div>
   );
