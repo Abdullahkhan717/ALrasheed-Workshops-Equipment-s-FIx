@@ -92,6 +92,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
         [t('timeOut')]: req.timeOut || '',
         [t('applicationStatus')]: req.applicationStatus || 'Pending',
         [t('workStatus')]: req.status,
+        [t('repairRequest_jobSituation')]: req.jobSituation || 'Under process',
         [t('rejectionReason')]: req.rejectionReason || '',
         [t('workDone')]: req.workDone || '',
         [t('partsUsed')]: req.partsUsed || '',
@@ -278,12 +279,6 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                     }`}>
                       {t(req.status.toLowerCase() as any)}
                     </span>
-                    <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase ${
-                        req.currentJobStatus === 'Hold' ? 'bg-orange-100 text-orange-800' : 
-                        'bg-blue-100 text-blue-800'
-                    }`}>
-                      {t(req.currentJobStatus?.toLowerCase() as any || 'under_process')}
-                    </span>
                 </div>
               </div>
 
@@ -294,15 +289,13 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                     <span className="font-medium text-gray-800">{t(`purpose_${req.purpose.toLowerCase().replace(/ /g, '_')}`)}</span>
                   </div>
                   <div className="flex items-center text-sm">
+                    <span className="text-gray-500 w-24 flex-shrink-0">{t('repairRequest_jobSituation')}:</span>
+                    <span className="font-medium text-gray-800">{t(`jobSituation_${req.jobSituation?.toLowerCase().replace(/ /g, '_') || 'under_process'}`)}</span>
+                  </div>
+                  <div className="flex items-center text-sm">
                     <span className="text-gray-500 w-24 flex-shrink-0">{t('driver')}:</span>
                     <span className="font-medium text-gray-800">{req.driverName}</span>
                   </div>
-                  
-                  {req.statusReason && (
-                    <div className="mt-2 p-3 bg-orange-50 border border-orange-100 rounded-lg text-orange-700 text-xs">
-                      <span className="font-bold">{t('reason')}:</span> {req.statusReason}
-                    </div>
-                  )}
                   
                   {req.rejectionReason && (
                     <div className="mt-2 p-3 bg-red-50 border border-red-100 rounded-lg text-red-700 text-xs">

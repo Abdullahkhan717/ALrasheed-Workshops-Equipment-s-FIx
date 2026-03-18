@@ -22,7 +22,7 @@ export const CompletedRequestsList: React.FC<CompletedRequestsListProps> = ({ re
 
   const getEquipmentInfo = (equipmentId: string) => {
     const equipment = equipments.find(e => e.id === equipmentId);
-    return equipment ? `${equipment.equipmentNumber} (${equipment.serialNumber})` : t('unknownEquipment');
+    return equipment ? `${equipment.equipmentType} ${equipment.equipmentNumber} (${equipment.serialNumber})` : t('unknownEquipment');
   };
 
   return (

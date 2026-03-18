@@ -40,53 +40,32 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
         scale: 2,
         useCORS: true,
         logging: false,
-        windowWidth: 800, // Force the virtual window width for consistent layout
+        width: 800,
+        height: 1123,
+        windowWidth: 800,
+        windowHeight: 1123,
         onclone: (clonedDoc) => {
-            const element = clonedDoc.getElementById('print-section');
-            if (element) {
-                // Remove scaling classes that cause layout issues in PDF
-                element.classList.remove('scale-[0.45]', 'sm:scale-75', 'md:scale-100');
-                element.style.transform = 'none';
-                element.style.scale = '1';
-                element.style.width = '800px';
-            }
-            
-            // Replace oklch in all style tags in the head
-            const styleTags = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
-            styleTags.forEach(style => {
-                if (style.tagName === 'STYLE') {
-                    style.innerHTML = style.innerHTML.replace(/oklch\([^)]*\)/g, '#000000');
-                } else {
-                    // For linked stylesheets, we might not be able to access content easily,
-                    // but we can try to force override styles on the body
-                    const sheet = (style as HTMLLinkElement).sheet;
-                    if (sheet) {
-                        try {
-                            for (let i = 0; i < sheet.cssRules.length; i++) {
-                                const rule = sheet.cssRules[i];
-                                if (rule.cssText.includes('oklch')) {
-                                    // This is hard to replace directly in a linked sheet, 
-                                    // so we add an override style
-                                }
-                            }
-                        } catch (e) {
-                            console.warn("Could not access stylesheet", e);
+            // Remove all style sheets that might contain oklch
+            for (let i = 0; i < clonedDoc.styleSheets.length; i++) {
+                try {
+                    const sheet = clonedDoc.styleSheets[i];
+                    const rules = sheet.cssRules || sheet.rules;
+                    for (let j = rules.length - 1; j >= 0; j--) {
+                        if (rules[j].cssText.includes('oklch')) {
+                            sheet.deleteRule(j);
                         }
                     }
+                } catch (e) {
+                    console.error("Error removing rule", e);
                 }
-            });
-            
-            // Force override styles on all elements to ensure PDF compatibility
+            }
+
+            // Remove oklch from inline styles
             const allElements = clonedDoc.querySelectorAll('*');
-            allElements.forEach(el => {
+            allElements.forEach((el) => {
                 const element = el as HTMLElement;
-                
-                // Remove any background colors that might be causing the black filling
-                element.style.backgroundColor = 'transparent';
-                
-                // Ensure text is black for readability
-                if (element.style.color && element.style.color.includes('oklch')) {
-                    element.style.color = '#000000';
+                if (element.style.cssText.includes('oklch')) {
+                    element.style.cssText = element.style.cssText.replace(/oklch\([^)]*\)/g, 'black');
                 }
             });
         }
@@ -212,11 +191,12 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
           <div className="border-4 border-double border-black p-6 mb-6">
             <div className="flex justify-between items-center border-b-2 border-black pb-4 mb-6">
               <div className="text-start">
-                <h1 className="text-3xl font-black uppercase tracking-tighter">{t('jobCard_companyName')}</h1>
-                <p className="text-sm font-bold uppercase">{t('jobCard_subtitle')}</p>
+                <h1 className="text-3xl font-black uppercase tracking-tighter">{t('companyName')}</h1>
+                <p className="text-sm font-bold uppercase">{t('systemTitle')}</p>
+                <p className="text-xs">{t('systemSubtitle')}</p>
               </div>
               <div className="text-end">
-                <h2 className="text-4xl font-black text-gray-300">{t('jobCard_title')}</h2>
+                <h2 className="text-4xl font-black text-gray-300">{t('jobCard')}</h2>
                 <p className="text-sm font-bold">No: <span className="text-red-600">{request.id}</span></p>
               </div>
             </div>
@@ -243,21 +223,25 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
               
               <div className="space-y-2 text-start">
                 <div className="flex border-b border-gray-200 py-1">
-                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('jobStatus')}</span>
+                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('jobCard_jobStatus')}</span>
                   <span className={`font-bold text-sm uppercase ${request.status === 'Completed' ? 'text-green-600' : 'text-orange-600'}`}>
                     {t(request.status.toLowerCase() as any)}
                   </span>
                 </div>
                 <div className="flex border-b border-gray-200 py-1">
-                  <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('currentStatus')}</span>
-                  <span className="font-bold text-sm uppercase text-blue-600">
-                    {request.currentJobStatus || 'Under process'}
-                  </span>
+                    <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('repairRequest_jobSituation')}</span>
+                    <span className="font-semibold text-sm">{t(`jobSituation_${request.jobSituation?.toLowerCase().replace(/ /g, '_') || 'under_process'}`)}</span>
                 </div>
-                {request.currentJobStatus !== 'Under process' && (
+                {request.jobSituation !== 'Under process' && (
                     <div className="flex border-b border-gray-200 py-1">
-                        <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('reason')}</span>
-                        <span className="font-semibold text-sm">{request.statusReason || '-'}</span>
+                        <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('situationReason')}</span>
+                        <span className="font-semibold text-sm">{request.situationReason}</span>
+                    </div>
+                )}
+                {request.jobSituation === 'Referred to another workshop' && (
+                    <div className="flex border-b border-gray-200 py-1">
+                        <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('referredWorkshopName')}</span>
+                        <span className="font-semibold text-sm">{request.referredWorkshopName}</span>
                     </div>
                 )}
                 <div className="flex border-b border-gray-200 py-1">
@@ -314,10 +298,10 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
               <table className="w-full border-collapse border border-black">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border border-black p-2 text-xs font-bold uppercase w-12">{t('sr')}</th>
-                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">{t('workshop')}</th>
-                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">{t('mechanic')}</th>
-                    <th className="border border-black p-2 text-xs font-bold uppercase">{t('description')}</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-12">Sr.</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">Workshop</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase w-1/4">Mechanic</th>
+                    <th className="border border-black p-2 text-xs font-bold uppercase">{t('workshopMechanicFaultDescription')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -351,21 +335,21 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                   {request.faults.map((fault, index) => (
                     <div key={fault.id} className="border border-gray-200 p-3 rounded">
                       <div className="flex justify-between mb-2">
-                        <p className="text-xs font-bold uppercase text-gray-500">{t('fault_colon')} #{index + 1}</p>
+                        <p className="text-xs font-bold uppercase text-gray-500">Fault #{index + 1}</p>
                         <p className="text-sm font-semibold">{fault.description}</p>
                       </div>
                       <div className="mb-3">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">{t('workDone_colon')}</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Work Performed</p>
                         <p className="text-sm whitespace-pre-wrap bg-gray-50 p-2 rounded border border-gray-100">{fault.workDone || 'N/A'}</p>
                       </div>
                       {fault.partsUsed && fault.partsUsed.length > 0 && (
                         <div>
-                          <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">{t('partsUsed')}</p>
+                          <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Parts Replaced</p>
                           <div className="grid grid-cols-2 gap-2">
                             {fault.partsUsed.map(part => (
                               <div key={part.id} className="flex justify-between text-xs border-b border-gray-100 pb-1">
                                 <span>{part.name}</span>
-                                <span className="font-bold">{t('quantity')}: {part.quantity}</span>
+                                <span className="font-bold">Qty: {part.quantity}</span>
                               </div>
                             ))}
                           </div>
@@ -380,7 +364,7 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
             <div className="mt-12 grid grid-cols-3 gap-12">
               <div className="text-center">
                 <div className="border-t border-black pt-2">
-                  <p className="text-[10px] font-bold uppercase">{t('driverSignature')}</p>
+                  <p className="text-[10px] font-bold uppercase">{t('operatorSignature')}</p>
                 </div>
               </div>
               <div className="text-center">
@@ -391,13 +375,13 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
               </div>
               <div className="text-center">
                 <div className="border-t border-black pt-2">
-                  <p className="text-[10px] font-bold uppercase">{t('workshopManagerSignature')}</p>
+                  <p className="text-[10px] font-bold uppercase">{t('managerSignature')}</p>
                 </div>
               </div>
             </div>
             
             <div className="mt-8 text-center text-[8px] text-gray-400 uppercase tracking-[0.2em]">
-              Computer Generated Document - No Signature Required for Validation
+              {t('computerGenerated')}
             </div>
           </div>
         </div>

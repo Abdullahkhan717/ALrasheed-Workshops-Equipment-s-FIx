@@ -31,7 +31,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
   const [driverName, setDriverName] = useState('');
   const [mileage, setMileage] = useState('');
   const [purpose, setPurpose] = useState<'Repairing' | 'preparing for work' | 'General Checking' | 'Other' | 'Oil Change' | 'Tyre Change'>('Repairing');
-  const [currentJobStatus, setCurrentJobStatus] = useState<'Under process' | 'Hold' | 'Refer to another workshop'>('Under process');
+  const [jobSituation, setJobSituation] = useState<'Under process' | 'Hold' | 'Referred to another workshop'>('Under process');
   const [requestType, setRequestType] = useState<'repair' | 'oil' | 'tyre'>('repair');
   const [fromLocation, setFromLocation] = useState(currentUser?.location || '');
   const [toLocation, setToLocation] = useState(currentUser?.location || '');
@@ -103,6 +103,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
     setDriverName('');
     setMileage('');
     setPurpose('Repairing');
+    setJobSituation('Under process');
     setFaults([{ id: crypto.randomUUID(), description: '', workshopId: '', mechanicName: '' }]);
     setSelectedOils([]);
     setSelectedFilters([]);
@@ -125,6 +126,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
 
     let finalFaults: Fault[] = [];
     let finalPurpose = purpose;
+    let finalJobSituation = jobSituation;
 
     if (requestType === 'oil') {
       const oilList = selectedOils.map(o => o === 'Other' ? customOil : o).filter(Boolean);
@@ -173,6 +175,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
             purpose: finalPurpose,
             mileage,
             faults: finalFaults,
+            jobSituation: finalJobSituation,
         };
         const originalRequest = repairRequests.find(r => r.id === editingRequestId);
         if (originalRequest) {
@@ -196,7 +199,8 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
               dateOut: updatedRequest.dateOut || '',
               timeOut: updatedRequest.timeOut || '',
               workDone: updatedRequest.faults.map(f => f.workDone || '').filter(Boolean).join('; '),
-              partsUsed: updatedRequest.faults.flatMap(f => f.partsUsed || []).map(p => `${p.name} (${p.quantity})`).join(', ')
+              partsUsed: updatedRequest.faults.flatMap(f => f.partsUsed || []).map(p => `${p.name} (${p.quantity})`).join(', '),
+              jobSituation: updatedRequest.jobSituation || 'Under process',
             };
             updateData('RepairRequests', payload)
                 .then(() => {
@@ -224,7 +228,6 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           driverName,
           mileage,
           purpose: finalPurpose,
-          currentJobStatus,
           faults: finalFaults,
           dateIn: now.toISOString(), // Use ISO for consistent parsing
           timeIn: now.toISOString(),
@@ -237,6 +240,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           applicationType: appType,
           acceptedBy: isIRO ? 'System' : '',
           approvalDate: isIRO ? now.toISOString() : '',
+          jobSituation: finalJobSituation,
         };
         
         const payload = {
@@ -245,7 +249,6 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           driverName,
           mileage: mileage || '',
           purpose: finalPurpose,
-          currentJobStatus,
           faults: JSON.stringify(finalFaults),
           dateIn: now.toISOString(),
           timeIn: now.toISOString(),
@@ -263,6 +266,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
           partsUsed: '',
           acceptedBy: isIRO ? 'System' : '',
           approvalDate: isIRO ? now.toISOString() : '',
+          jobSituation: finalJobSituation,
         };
         createData('RepairRequests', payload)
           .then(() => {
@@ -576,16 +580,16 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                 </div>
                 
                 <div>
-                    <label htmlFor="currentJobStatus" className="block text-sm font-medium text-gray-700">Current Job Status</label>
+                    <label htmlFor="jobSituation" className="block text-sm font-medium text-gray-700">{t('repairRequest_jobSituation')}</label>
                     <select
-                        id="currentJobStatus"
-                        value={currentJobStatus}
-                        onChange={(e) => setCurrentJobStatus(e.target.value as any)}
+                        id="jobSituation"
+                        value={jobSituation}
+                        onChange={(e) => setJobSituation(e.target.value as any)}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                     >
-                        <option value="Under process">Under process</option>
-                        <option value="Hold">Hold</option>
-                        <option value="Refer to another workshop">Refer to another workshop</option>
+                        <option value="Under process">{t('jobSituation_underProcess')}</option>
+                        <option value="Hold">{t('jobSituation_hold')}</option>
+                        <option value="Referred to another workshop">{t('jobSituation_referredToAnotherWorkshop')}</option>
                     </select>
                 </div>
                 

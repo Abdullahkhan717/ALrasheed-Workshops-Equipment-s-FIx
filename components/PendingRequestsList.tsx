@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import type { Equipment, Workshop, RepairRequest } from '../types';
 import { JobCard } from './JobCard';
-import { PrinterIcon, WhatsappIcon, CheckBadgeIcon, EyeIcon, XMarkIcon, TrashIcon, PencilIcon } from './Icons';
+import { PrinterIcon, WhatsappIcon, CheckBadgeIcon, EyeIcon, XMarkIcon, TrashIcon } from './Icons';
 import { useTranslation } from '../hooks/useTranslation';
 import { CompletionFormModal } from './CompletionFormModal';
-import { UpdateStatusModal } from './UpdateStatusModal';
+import { UpdateSituationModal } from './UpdateSituationModal';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { formatDate } from '../utils/formatters';
@@ -21,7 +21,7 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
   const [requestToPrint, setRequestToPrint] = useState<RepairRequest | null>(null);
   const [requestToShare, setRequestToShare] = useState<RepairRequest | null>(null);
   const [requestToComplete, setRequestToComplete] = useState<RepairRequest | null>(null);
-  const [requestToUpdateStatus, setRequestToUpdateStatus] = useState<RepairRequest | null>(null);
+  const [requestToUpdateSituation, setRequestToUpdateSituation] = useState<RepairRequest | null>(null);
   const { t, language } = useTranslation();
   const { currentUser } = useAuth();
   const { updateData, deleteData } = useData();
@@ -32,7 +32,7 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
 
   const getEquipmentInfo = (equipmentId: string) => {
     const equipment = equipments.find(e => e.id === equipmentId);
-    return equipment ? `${t(equipment.equipmentType)} ${equipment.equipmentNumber} (${equipment.serialNumber})` : t('unknownEquipment');
+    return equipment ? `${equipment.equipmentType} ${equipment.equipmentNumber} (${equipment.serialNumber})` : t('unknownEquipment');
   };
   
   const handleSaveCompletion = async (completedRequest: RepairRequest) => {
@@ -40,13 +40,13 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
     setRequestToComplete(null);
   };
 
-  const handleUpdateStatus = async (updatedRequest: RepairRequest) => {
+  const handleUpdateSituation = async (updatedRequest: RepairRequest) => {
     const payload = {
         ...updatedRequest,
         faults: JSON.stringify(updatedRequest.faults)
     };
     await updateData('RepairRequests', payload);
-    setRequestToUpdateStatus(null);
+    setRequestToUpdateSituation(null);
   };
 
   const handleAccept = async (request: RepairRequest) => {
@@ -136,13 +136,13 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
             onSave={handleSaveCompletion}
         />
       )}
-
-      {requestToUpdateStatus && (
-        <UpdateStatusModal
-            request={requestToUpdateStatus}
+      
+      {requestToUpdateSituation && (
+        <UpdateSituationModal
+            request={requestToUpdateSituation}
             workshops={workshops}
-            onClose={() => setRequestToUpdateStatus(null)}
-            onSave={handleUpdateStatus}
+            onClose={() => setRequestToUpdateSituation(null)}
+            onUpdate={handleUpdateSituation}
         />
       )}
 
@@ -218,11 +218,11 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
 
                     {(currentUser?.location === request.toLocation || currentUser?.location === request.fromLocation || currentUser?.role === 'admin') && request.applicationStatus === 'Accepted' && request.status === 'Pending' && (
                         <>
-                            <button onClick={() => setRequestToUpdateStatus(request)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('updateStatus')}>
-                                <PencilIcon className="h-5 w-5"/>
-                            </button>
                             <button onClick={() => setRequestToComplete(request)} className="p-2 text-green-600 hover:text-green-900 hover:bg-green-100 rounded-full" title={t('markAsCompleted')}>
                                 <CheckBadgeIcon className="h-5 w-5"/>
+                            </button>
+                            <button onClick={() => setRequestToUpdateSituation(request)} className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-full" title={t('updateJobSituation')}>
+                                <EyeIcon className="h-5 w-5"/>
                             </button>
                         </>
                     )}
@@ -325,22 +325,13 @@ export const PendingRequestsList: React.FC<PendingRequestsListProps> = ({ repair
                 )}
 
                 {(currentUser?.location === request.toLocation || currentUser?.location === request.fromLocation || currentUser?.role === 'admin') && request.applicationStatus === 'Accepted' && request.status === 'Pending' && (
-                  <div className="w-full flex gap-2">
-                    <button 
-                      onClick={() => setRequestToUpdateStatus(request)} 
-                      className="flex-1 flex items-center justify-center space-x-2 bg-blue-50 text-blue-700 py-2 rounded-lg hover:bg-blue-100 transition-colors"
-                    >
-                      <PencilIcon className="h-4 w-4"/>
-                      <span className="text-xs font-medium">{t('updateStatus')}</span>
-                    </button>
-                    <button 
-                      onClick={() => setRequestToComplete(request)} 
-                      className="flex-1 flex items-center justify-center space-x-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      <CheckBadgeIcon className="h-4 w-4"/>
-                      <span className="text-xs font-medium">{t('complete')}</span>
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => setRequestToComplete(request)} 
+                    className="flex-1 flex items-center justify-center space-x-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <CheckBadgeIcon className="h-4 w-4"/>
+                    <span className="text-xs font-medium">{t('complete')}</span>
+                  </button>
                 )}
 
                 <div className="w-full flex gap-2">

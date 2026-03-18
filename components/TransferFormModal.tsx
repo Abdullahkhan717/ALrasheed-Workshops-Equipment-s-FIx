@@ -84,7 +84,7 @@ export const TransferFormModal: React.FC<TransferFormModalProps> = ({ equipment,
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('reason')}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('transfer_reason')}</label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
