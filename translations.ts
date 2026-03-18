@@ -28,6 +28,7 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     user: 'User',
     role: 'Role',
     password: 'Password',
+    pressAgainToExit: 'Press again to exit',
     
     // Job Card
     companyName: 'AL RASHEED CO.',
@@ -467,6 +468,7 @@ export const translations: { [lang: string]: { [key: string]: string } } = {
     user: 'مستخدم',
     role: 'الدور',
     password: 'كلمة المرور',
+    pressAgainToExit: 'اضغط مرة أخرى للخروج',
 
     // Job Card
     companyName: 'شركة الرشيد',

@@ -51,6 +51,14 @@ const AppContent: React.FC = () => {
   const [isHistorySearchFocused, setIsHistorySearchFocused] = useState(false);
 
   const [lastBackPress, setLastBackPress] = useState(0);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
 
   useEffect(() => {
     // Set initial state
@@ -64,7 +72,7 @@ const AppContent: React.FC = () => {
           window.close();
         } else {
           setLastBackPress(now);
-          alert('Double Tap to Exit');
+          setShowToast(true);
           window.history.pushState({ view: 'dashboard' }, '');
         }
       } else if (event.state && event.state.view) {
@@ -689,6 +697,12 @@ const AppContent: React.FC = () => {
           onClose={() => setTransferEquipment(null)} 
           onSave={handleTransferRequest} 
         />
+      )}
+
+      {showToast && (
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
+          {t('pressAgainToExit')}
+        </div>
       )}
     </div>
   );
