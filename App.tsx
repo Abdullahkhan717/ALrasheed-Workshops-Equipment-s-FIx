@@ -50,12 +50,24 @@ const AppContent: React.FC = () => {
   const [searchHistoryEquipmentQuery, setSearchHistoryEquipmentQuery] = useState('');
   const [isHistorySearchFocused, setIsHistorySearchFocused] = useState(false);
 
+  const [lastBackPress, setLastBackPress] = useState(0);
+
   useEffect(() => {
     // Set initial state
     window.history.replaceState({ view: 'dashboard' }, '');
 
     const handlePopState = (event: PopStateEvent) => {
-      if (event.state && event.state.view) {
+      if (activeView === 'dashboard') {
+        const now = Date.now();
+        if (now - lastBackPress < 2000) {
+          // Exit
+          window.close();
+        } else {
+          setLastBackPress(now);
+          alert('Double Tap to Exit');
+          window.history.pushState({ view: 'dashboard' }, '');
+        }
+      } else if (event.state && event.state.view) {
         setActiveView(event.state.view);
       } else {
         setActiveView('dashboard');
@@ -64,7 +76,7 @@ const AppContent: React.FC = () => {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [activeView, lastBackPress]);
 
   useEffect(() => {
     // Only push if it's a new view

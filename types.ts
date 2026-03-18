@@ -54,9 +54,6 @@ export interface RepairRequest {
   timeOut?: string;
   status: 'Pending' | 'Completed';
   applicationStatus: 'Pending' | 'Accepted' | 'Rejected' | 'Cancelled';
-  currentJobStatus: 'Under process' | 'Hold' | 'Refer to another workshop';
-  statusReason?: string;
-  referredWorkshopId?: string;
   workshopId?: string;
   createdBy?: string;
   workDone?: string;
@@ -67,6 +64,9 @@ export interface RepairRequest {
   rejectionReason?: string;
   acceptedBy?: string;
   approvalDate?: string;
+  jobSituation?: 'Under process' | 'Hold' | 'Referred to another workshop';
+  situationReason?: string;
+  referredWorkshopName?: string;
 }
 
 export interface TransferRequest {
