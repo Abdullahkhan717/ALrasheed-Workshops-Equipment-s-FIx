@@ -64,7 +64,7 @@ export interface RepairRequest {
   rejectionReason?: string;
   acceptedBy?: string;
   approvalDate?: string;
-  jobSituation?: 'Under process' | 'Hold' | 'Referred to another workshop';
+  jobSituation?: 'Under process' | 'Hold' | 'Referred to another workshop' | 'Completed';
   situationReason?: string;
   referredWorkshopName?: string;
 }
