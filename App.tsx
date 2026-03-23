@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { EquipmentList } from './components/FleetList';
 import { RepairRequestView } from './components/RepairRequestView';
@@ -52,6 +52,12 @@ const AppContent: React.FC = () => {
 
   const [lastBackPress, setLastBackPress] = useState(0);
   const [showToast, setShowToast] = useState(false);
+  const activeViewRef = useRef(activeView);
+  const lastBackPressRef = useRef(0);
+
+  useEffect(() => {
+    activeViewRef.current = activeView;
+  }, [activeView]);
 
   useEffect(() => {
     if (showToast) {
@@ -65,9 +71,9 @@ const AppContent: React.FC = () => {
     window.history.replaceState({ view: 'dashboard' }, '');
 
     const handlePopState = (event: PopStateEvent) => {
-      if (activeView === 'dashboard') {
+      if (activeViewRef.current === 'dashboard') {
         const now = Date.now();
-        if (now - lastBackPress < 2000) {
+        if (now - lastBackPressRef.current < 2000) {
           // Exit
           if ((window as any).navigator && (window as any).navigator.app) {
             (window as any).navigator.app.exitApp();
@@ -75,8 +81,8 @@ const AppContent: React.FC = () => {
             window.close();
           }
         } else {
-          setLastBackPress(now);
-          setShowToast(true);
+          lastBackPressRef.current = now;
+          alert("App band karne ke liye ek baar phir back dabayen");
           window.history.pushState({ view: 'dashboard' }, '');
         }
       } else if (event.state && event.state.view) {
@@ -88,7 +94,7 @@ const AppContent: React.FC = () => {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [activeView, lastBackPress]);
+  }, []);
 
   useEffect(() => {
     // Only push if it's a new view
