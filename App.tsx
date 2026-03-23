@@ -82,7 +82,7 @@ const AppContent: React.FC = () => {
           }
         } else {
           lastBackPressRef.current = now;
-          alert("App band karne ke liye ek baar phir back dabayen");
+          alert("“Press back once more to exit the app/لإغلاق التطبيق، اضغط زر الرجوع مرة أخرى");
           window.history.pushState({ view: 'dashboard' }, '');
         }
       } else if (event.state && event.state.view) {
