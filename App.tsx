@@ -69,7 +69,11 @@ const AppContent: React.FC = () => {
         const now = Date.now();
         if (now - lastBackPress < 2000) {
           // Exit
-          window.close();
+          if ((window as any).navigator && (window as any).navigator.app) {
+            (window as any).navigator.app.exitApp();
+          } else {
+            window.close();
+          }
         } else {
           setLastBackPress(now);
           setShowToast(true);
