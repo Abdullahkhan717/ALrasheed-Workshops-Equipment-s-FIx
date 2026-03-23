@@ -11,7 +11,7 @@ interface UpdateSituationModalProps {
 
 export const UpdateSituationModal: React.FC<UpdateSituationModalProps> = ({ request, workshops, onClose, onUpdate }) => {
   const { t, language } = useTranslation();
-  const [jobSituation, setJobSituation] = useState<'Under process' | 'Hold' | 'Referred to another workshop'>(request.jobSituation || 'Under process');
+  const [jobSituation, setJobSituation] = useState<'Under process' | 'Hold' | 'Referred to another workshop' | 'Completed'>(request.jobSituation || 'Under process');
   const [situationReason, setSituationReason] = useState(request.situationReason || '');
   const [referredWorkshopName, setReferredWorkshopName] = useState(request.referredWorkshopName || '');
 
@@ -44,6 +44,7 @@ export const UpdateSituationModal: React.FC<UpdateSituationModalProps> = ({ requ
               <option value="Under process">{t('jobSituation_underProcess')}</option>
               <option value="Hold">{t('jobSituation_hold')}</option>
               <option value="Referred to another workshop">{t('jobSituation_referredToAnotherWorkshop')}</option>
+              <option value="Completed">{t('jobSituation_completed')}</option>
             </select>
           </div>
           {(jobSituation === 'Hold' || jobSituation === 'Referred to another workshop') && (

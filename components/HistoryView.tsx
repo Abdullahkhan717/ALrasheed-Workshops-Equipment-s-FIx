@@ -290,7 +290,13 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ equipments, workshops,
                   </div>
                   <div className="flex items-center text-sm">
                     <span className="text-gray-500 w-24 flex-shrink-0">{t('repairRequest_jobSituation')}:</span>
-                    <span className="font-medium text-gray-800">{t(`jobSituation_${req.jobSituation?.toLowerCase().replace(/ /g, '_') || 'under_process'}`)}</span>
+                    <span className="font-medium text-gray-800">
+                        {t(`jobSituation_${req.status === 'Completed' ? 'completed' :
+                                       req.jobSituation === 'Under process' ? 'underProcess' : 
+                                       req.jobSituation === 'Hold' ? 'hold' : 
+                                       req.jobSituation === 'Referred to another workshop' ? 'referredToAnotherWorkshop' : 
+                                       'underProcess'}`)}
+                    </span>
                   </div>
                   <div className="flex items-center text-sm">
                     <span className="text-gray-500 w-24 flex-shrink-0">{t('driver')}:</span>

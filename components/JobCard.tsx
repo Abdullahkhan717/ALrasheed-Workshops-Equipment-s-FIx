@@ -230,7 +230,13 @@ export const JobCard: React.FC<JobCardProps> = ({ request, equipment, workshops,
                 </div>
                 <div className="flex border-b border-gray-200 py-1">
                     <span className="w-32 font-bold text-xs uppercase text-gray-500">{t('repairRequest_jobSituation')}</span>
-                    <span className="font-semibold text-sm">{t(`jobSituation_${request.jobSituation?.toLowerCase().replace(/ /g, '_') || 'under_process'}`)}</span>
+                    <span className="font-semibold text-sm">
+                        {t(`jobSituation_${request.status === 'Completed' ? 'completed' :
+                                       request.jobSituation === 'Under process' ? 'underProcess' : 
+                                       request.jobSituation === 'Hold' ? 'hold' : 
+                                       request.jobSituation === 'Referred to another workshop' ? 'referredToAnotherWorkshop' : 
+                                       'underProcess'}`)}
+                    </span>
                 </div>
                 {request.jobSituation !== 'Under process' && (
                     <div className="flex border-b border-gray-200 py-1">

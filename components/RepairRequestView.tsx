@@ -70,7 +70,25 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
         setShowWorkshopModal(true);
         return;
     }
-    setFaults(faults.map(fault => fault.id === id ? { ...fault, [field]: value } : fault));
+    
+    setFaults(faults.map(fault => {
+        if (fault.id === id) {
+            const updatedFault = { ...fault, [field]: value };
+            if (field === 'workshopId') {
+                console.log("Selected workshop ID:", value);
+                console.log("Available workshops:", workshops);
+                const selectedWorkshop = workshops.find(w => String(w.id) === String(value));
+                console.log("Found workshop:", selectedWorkshop);
+                if (selectedWorkshop) {
+                    updatedFault.mechanicName = selectedWorkshop.mechanic || selectedWorkshop.foreman || '';
+                } else {
+                    updatedFault.mechanicName = '';
+                }
+            }
+            return updatedFault;
+        }
+        return fault;
+    }));
   };
   
   const handleAddEquipment = async (equipment: Omit<Equipment, 'id'>) => {
@@ -590,6 +608,7 @@ export const RepairRequestView: React.FC<RepairRequestViewProps> = ({ equipments
                         <option value="Under process">{t('jobSituation_underProcess')}</option>
                         <option value="Hold">{t('jobSituation_hold')}</option>
                         <option value="Referred to another workshop">{t('jobSituation_referredToAnotherWorkshop')}</option>
+                        <option value="Completed">{t('jobSituation_completed')}</option>
                     </select>
                 </div>
                 

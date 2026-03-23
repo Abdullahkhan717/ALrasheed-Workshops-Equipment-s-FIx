@@ -94,6 +94,7 @@ export const CompletionFormModal: React.FC<CompletionFormModalProps> = ({ reques
         dateOut,
         timeOut,
         status: 'Completed',
+        jobSituation: 'Completed',
     };
     onSave(completedRequest);
   };
